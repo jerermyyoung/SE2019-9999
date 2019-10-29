@@ -1,6 +1,7 @@
 import Util from '../common/util'
 import Constants from '../common/constants'
-
+import PageBus from '../page/bus' //引用page选择组件
+let pagebus = new PageBus();//选择页面的通信
 const screenWidth  = window.innerWidth
 const screenHeight = window.innerHeight
 
@@ -44,6 +45,10 @@ export default class GameInfo {
           callback({ message: 'restart' })
           this.showGameOver = false
         }
+        else if (this.showGameOver && Util.inArea({ x, y }, this.btnReturn)) {
+          callback({ message: 'return' })
+          this.showGameOver = false
+        }
         break
     }
   }
@@ -76,7 +81,7 @@ export default class GameInfo {
 
   renderGameOver(ctx, score) {
     this.showGameOver = true
-    ctx.drawImage(atlas, 0, 0, 119, 108, screenWidth / 2 - 150, screenHeight / 2 - 100, 300, 300)
+    ctx.drawImage(atlas, 0, 0, 119, 108, screenWidth / 2 - 150, screenHeight / 2 - 200, 300, 400)
 
     ctx.fillStyle = "#ffffff"
     ctx.font    = "20px Arial"
@@ -84,27 +89,55 @@ export default class GameInfo {
     ctx.fillText(
       '游戏结束',
       screenWidth / 2 - 40,
-      screenHeight / 2 - 100 + 50
+      screenHeight / 2 - 100 - 50
     )
 
     ctx.fillText(
       '得分: ' + score,
       screenWidth / 2 - 40,
-      screenHeight / 2 - 100 + 130
+      screenHeight / 2 - 100 + 0
     )
 
     ctx.drawImage(
       atlas,
       120, 6, 39, 24,
       screenWidth / 2 - 60,
-      screenHeight / 2 - 100 + 180,
+      screenHeight / 2 - 100 + 50,
       120, 40
     )
 
     ctx.fillText(
       '重新开始',
       screenWidth / 2 - 40,
-      screenHeight / 2 - 100 + 205
+      screenHeight / 2 - 100 + 75
+    )
+
+    ctx.drawImage(
+      atlas,
+      120, 6, 39, 24,
+      screenWidth / 2 - 60,
+      screenHeight / 2 - 100 + 100,
+      120, 40
+    )
+
+    ctx.fillText(
+      '返回主页',
+      screenWidth / 2 - 40,
+      screenHeight / 2 - 100 + 125
+    )
+
+    ctx.drawImage(
+      atlas,
+      120, 6, 39, 24,
+      screenWidth / 2 - 60,
+      screenHeight / 2 - 100 + 150,
+      120, 40
+    )
+
+    ctx.fillText(
+      '选择关卡',
+      screenWidth / 2 - 40,
+      screenHeight / 2 - 100 + 175
     )
 
     /**
@@ -113,9 +146,23 @@ export default class GameInfo {
      */
     this.btnRestart = {
       startX: screenWidth / 2 - 40,
-      startY: screenHeight / 2 - 100 + 180,
+      startY: screenHeight / 2 - 100 + 50,
       endX  : screenWidth / 2  + 50,
-      endY  : screenHeight / 2 - 100 + 255
+      endY  : screenHeight / 2 - 100 + 90
+    }
+
+    this.btnReturn = {
+      startX: screenWidth / 2 - 40,
+      startY: screenHeight / 2 - 100 + 100,
+      endX: screenWidth / 2 + 50,
+      endY: screenHeight / 2 - 100 + 140
+    }
+
+    this.btnmission = {
+      startX: screenWidth / 2 - 40,
+      startY: screenHeight / 2 - 100 + 150,
+      endX: screenWidth / 2 + 50,
+      endY: screenHeight / 2 - 100 + 190
     }
   }
 }

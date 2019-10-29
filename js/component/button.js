@@ -17,9 +17,11 @@ export default class Button {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
     ctx.fillStyle='white'
     ctx.font = '16px Arial';
-    ctx.textAlign="center" //文字居中
+    let tmpsta = ctx.textAlign;
+    if(this.text!='')ctx.textAlign="center" //文字居中
     ctx.fillStyle = this.color;
     ctx.fillText(this.text, this.x+this.width/2, this.y+this.height/2+2)
+    ctx.textAlign=tmpsta;
     // ctx.draw();
   }
 

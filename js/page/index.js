@@ -41,7 +41,7 @@ export default class Index {
       canvas.removeEventListener(type, this.touchHandler)
     });
     window.cancelAnimationFrame(this.aniId);
-    console.log('ok')
+    // console.log('ok')
   }
   loop() {
 
@@ -74,10 +74,16 @@ export default class Index {
       [e.touches[0].clientX, e.touches[0].clientY] : [null, null]
     if(this.startbtn.isTapped(x,y)==true)//开始游戏
     {
-      console.log(true);
+      // console.log(true);
       this.remove();
       // pagebus.showpage(1);
-      pagebus.page=1;
+      pagebus.page=3;//选择世界
+    }
+    else if(this.settingbtn.isTapped(x,y)==true)//游戏设置
+    {
+      // console.log(true);
+      this.remove();
+      pagebus.page=2;
     }
   }
 }
