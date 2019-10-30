@@ -29,6 +29,7 @@ export default class Template {
         this.mission.push(newmission);
       }   
     }
+    this.returnbtn = new Button('选择世界', 'images/btn.png', (Width - 100) / 2, 470, 100, 50);
   }
   restart()//重置
   {
@@ -78,6 +79,7 @@ export default class Template {
         this.mission[i*3+j].render(ctx);
       }
     }
+    this.returnbtn.render(ctx);
   }
   touchEventHandler(e)//触屏检测，触发相应事件
   {
@@ -94,6 +96,11 @@ export default class Template {
        this.remove();
        pagebus.mission=1;
        pagebus.page=1;
+     }
+     else if(this.returnbtn.isTapped(x,y)==true)
+     {
+       this.remove();
+       pagebus.page=3;
      }
   }
 }

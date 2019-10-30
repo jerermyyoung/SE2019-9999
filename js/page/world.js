@@ -21,6 +21,7 @@ export default class Template {
     this.word2 = new Button('', 'images/bg.jpg', Width/2+10, 200, 100, 100);
     this.word3 = new Button('', 'images/bg.jpg', Width / 2 - 110, 350, 100, 100);
     this.word4 = new Button('', 'images/bg.jpg', Width / 2 + 10, 350, 100, 100);
+    this.returnbtn = new Button('返回主页','images/btn.png',(Width-100)/2,470,100,50);
   }
   restart()//重置
   {
@@ -67,6 +68,7 @@ export default class Template {
     this.word2.render(ctx);
     this.word3.render(ctx);
     this.word4.render(ctx);
+    this.returnbtn.render(ctx);
   }
   touchEventHandler(e)//触屏检测，触发相应事件
   {
@@ -98,6 +100,11 @@ export default class Template {
        pagebus.world = 4;
        this.remove();
        pagebus.page = 4;
+     }
+     else if (this.returnbtn.isTapped(x,y)==true)
+     {
+       this.remove();
+       pagebus.page=0;
      }
   }
 }
