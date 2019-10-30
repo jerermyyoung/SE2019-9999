@@ -7,6 +7,8 @@ const screenHeight = window.innerHeight
 
 let atlas = new Image()
 atlas.src = 'images/Common.png'
+let img = new Image();
+img.src = "images/shopbtn.png"
 
 const SettingCommands = {
   textList: ['每秒数据更新频率切换', '子弹速度切换', '子弹类型切换', '无敌模式切换', '背景层事件响应切换'],
@@ -17,6 +19,7 @@ const SettingCommands = {
 export default class GameInfo {
   constructor() {
     this.showGameOver = false
+    this.ispaused = false
   }
 
   onTouchEvent(type, x, y, callback) {
@@ -41,6 +44,11 @@ export default class GameInfo {
             }
           })
         }
+        else if (Util.inArea({ x, y }, this.areaPause)) {
+          this.ispaused = !this.ispaused;
+          if (this.ispaused) callback({ message: 'pause' })
+          else callback({ message: 'resume' })
+        }
         else if (this.showGameOver && Util.inArea({ x, y }, this.btnRestart)) {
           callback({ message: 'restart' })
           this.showGameOver = false
@@ -49,10 +57,41 @@ export default class GameInfo {
           callback({ message: 'return' })
           this.showGameOver = false
         }
+        else if (this.showGameOver && Util.inArea({ x, y }, this.btnmission)) {
+          callback({ message: 'returnmission' })
+          this.showGameOver = false
+        }
+        
         break
     }
   }
+  renderPause(ctx)
+  {
+    
+    // ctx.drawImage(img,screenWidth/2-20,5,40,40);
 
+    // this.areaPause = {
+    //   startX: screenWidth / 2 - 20,
+    //   startY: 5,
+    //   endX: screenWidth / 2 + 20,
+    //   endY: 45
+    // }
+    ctx.drawImage(img, 10, screenHeight-50, 40, 40);
+
+    this.areaPause = {
+      startX: 10,
+      startY: screenHeight - 50,
+      endX: 50,
+      endY: screenHeight - 10
+    }
+
+    if(this.ispaused==true)
+    {
+      ctx.fillStyle = "rgb(0,0,0,0.5)";
+      ctx.fillRect(0, 0, screenWidth, screenHeight)
+      ctx.fillStyle = "#ffffff";
+    }
+  }
   renderGameScore(ctx, score) {
     ctx.fillStyle = "#ffffff"
     ctx.font      = "20px Arial"

@@ -256,6 +256,10 @@ export default class Main {
               this.remove();
               pagebus.page=0;
               break
+            case 'returnmission':
+              this.remove();
+              pagebus.page = 4;
+              break
             case 'pause':
               this.pause()
               break
@@ -369,7 +373,7 @@ export default class Main {
     // })
 
     this.gameinfo.renderGameScore(ctx, databus.score)
-
+    this.gameinfo.renderPause(ctx);//暂停游戏
     // 游戏结束停止帧循环
     if (databus.gameStatus == DataBus.GameOver) {
       this.gameinfo.renderGameOver(ctx, databus.score)
