@@ -52,6 +52,7 @@ export default class GameInfo {
         else if (this.showGameOver && Util.inArea({ x, y }, this.btnRestart)) {
           callback({ message: 'restart' })
           this.showGameOver = false
+          // console.log('restart')
         }
         else if (this.showGameOver && Util.inArea({ x, y }, this.btnReturn)) {
           callback({ message: 'return' })

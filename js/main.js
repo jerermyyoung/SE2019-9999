@@ -92,6 +92,8 @@ export default class Main {
   restart() {
     databus.reset()
 
+    Config.Bullet.Type = 'single';
+
     //0.与通用类的关联
     console.log(`Restart: Config.UpdateRate=${Config.UpdateRate}`)
 
@@ -251,6 +253,7 @@ export default class Main {
             //--- Game Status Switch ---
             case 'restart':
               this.restart()
+              // console.log('re start!')
               break
             case 'return':
               this.remove();
