@@ -85,6 +85,12 @@ export default class Index {
       this.remove();
       pagebus.page=2;
     }
+    else if (this.achievebtn.isTapped(x, y) == true)//成就
+    {
+      // console.log(true);
+      this.remove();
+      pagebus.page = 5;
+    }
   }
 }
 
