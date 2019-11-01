@@ -6,6 +6,7 @@ import Index from './js/page/index'//引用页面
 import Setting from './js/page/setting'
 import World from './js/page/world'
 import Mission from './js/page/mission'
+import Achievement from './js/page/achievement'
 /*
   新增界面: import XXX from './js/page/xxx'
 */
@@ -49,6 +50,12 @@ Object.defineProperty(pagebus, "page", {
         new Mission();
         break;
       }
+      case 5: //成就界面
+        {
+          pagebus.ctx.textAlign = "center";
+          new Achievement();
+          break;
+        }
       /**
        * 新增界面，例如:
        * case 2:
