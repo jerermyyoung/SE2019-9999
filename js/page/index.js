@@ -91,6 +91,12 @@ export default class Index {
       this.remove();
       pagebus.page = 5;
     }
+    else if (this.shopbtn.isTapped(x, y) == true)//商店
+    {
+      // console.log(true);
+      this.remove();
+      pagebus.page = 6;
+    }
   }
 }
 
