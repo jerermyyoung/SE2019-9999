@@ -1,5 +1,5 @@
 export default class Button {
-  constructor(text, bg, x, y, width, height,color = 'white') {
+  constructor(text, bg, x, y, width, height,color = 'black') {
     this.img = new Image()
     this.img.src = bg
     this.text = text

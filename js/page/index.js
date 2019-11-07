@@ -20,8 +20,8 @@ export default class Index {
     this.startbtn=new Button('开始游戏','images/btn.png',(Width-200)/2,250,200,50);
     this.settingbtn = new Button('游戏设置', 'images/btn.png', (Width - 200) / 2, 310, 200, 50);
     this.helpbtn = new Button('帮助', 'images/btn.png', (Width - 200) / 2, 370, 200, 50);
-    this.shopbtn = new Button('商店', 'images/btn2.png', (Width - 200) / 2 +15, 450, 60, 60 , 'white')
-    this.achievebtn = new Button('成就', 'images/btn2.png', (Width + 200) / 2 - 75 , 450, 60, 60)
+    this.shopbtn = new Button('商店', 'images/btn.png', (Width - 200) / 2 +15, 450, 80, 70)
+    this.achievebtn = new Button('成就', 'images/btn.png', (Width + 200) / 2 - 75 , 450, 80, 70)
   }
   restart()
   {
