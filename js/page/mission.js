@@ -24,8 +24,8 @@ export default class Template {
       {
         console.log(i*3+j)
         var newmission;
-        if(i*3+j==0)newmission = new Button(i*3+j+1, 'images/btn.png',Width/2+j*70-100,200+70*i,60,60);
-        else newmission = new Button(i * 3 + j + 1, 'images/btn3.png', Width / 2 + j * 70 - 100, 200 + 70 * i, 60, 60);
+        if(i*3+j==0)newmission = new Button(i*3+j+1, 'images/btn1.png',Width/2+j*70-100,200+70*i,60,60);
+        else newmission = new Button(i * 3 + j + 1, 'images/btn2.png', Width / 2 + j * 70 - 100, 200 + 70 * i, 60, 60);
         this.mission.push(newmission);
       }   
     }

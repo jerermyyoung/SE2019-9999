@@ -21,9 +21,9 @@ export default class Template {
     this.boxbg=new Image();
     this.boxbg.src="images/boxbg.png";
     try {
-      this.bgmbtn = new StateBtn('', ['images/chose.png', 'images/chosen.png'], (Width + 300) / 2 - 80, 182, 20, 20, 'white', wx.getStorageSync('bgm'));
-      this.soundbtn = new StateBtn('', ['images/chose.png', 'images/chosen.png'], (Width + 300) / 2 - 80, 242, 20, 20, 'white', wx.getStorageSync('sound'));
-      this.nightbtn = new StateBtn('', ['images/chose.png', 'images/chosen.png'], (Width + 300) / 2 - 80, 302, 20, 20, 'white', wx.getStorageSync('night'));
+      this.bgmbtn = new StateBtn('', ['images/chose.png', 'images/chosen.png'], (Width + 300) / 2 - 80, 182, 20, 20, 'black', wx.getStorageSync('bgm'));
+      this.soundbtn = new StateBtn('', ['images/chose.png', 'images/chosen.png'], (Width + 300) / 2 - 80, 242, 20, 20, 'black', wx.getStorageSync('sound'));
+      this.nightbtn = new StateBtn('', ['images/chose.png', 'images/chosen.png'], (Width + 300) / 2 - 80, 302, 20, 20, 'black', wx.getStorageSync('night'));
       this.savebtn = new Button('保存设置', 'images/btn.png', (Width - 200) / 2, 370, 200, 50);
     } catch (e) {
       console.log(e);

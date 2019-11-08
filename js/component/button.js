@@ -15,7 +15,7 @@ export default class Button {
     if (!this.visible)
       return
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
-    ctx.fillStyle='white'
+    ctx.fillStyle='black'
     ctx.font = '16px Arial';
     let tmpsta = ctx.textAlign;
     if(this.text!='')ctx.textAlign="center" //文字居中
