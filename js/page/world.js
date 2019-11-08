@@ -21,7 +21,7 @@ export default class Template {
     this.word2 = new Button('', 'images/bg2.jpg', Width/2+10, 200, 100, 100);
     this.word3 = new Button('', 'images/bg3.jpg', Width / 2 - 110, 350, 100, 100);
     this.word4 = new Button('', 'images/bg.jpg', Width / 2 + 10, 350, 100, 100);
-    this.returnbtn = new Button('返回主页','images/btn.png',(Width-100)/2,470,100,50);
+    this.returnbtn = new Button('返回主页','images/btn.png',(Width-100)/2,480,100,50);
   }
   restart()//重置
   {
@@ -60,9 +60,9 @@ export default class Template {
      * 在canvas上画图
      *******************/
     ctx.drawImage(this.bg, 0, 0, systemInfo.windowWidth, systemInfo.windowHeight);
-    ctx.drawImage(this.boxbg, (Width - 300) / 2, 50, 300, 500);
+    ctx.drawImage(this.boxbg, (Width - 400) / 2, 50, 400, 500);
     ctx.font = '30px Arial';
-    ctx.fillText('选择世界', Width/2, 120)
+    ctx.fillText('选择世界', Width/2+50, 130)
     ctx.font = '16px Arial';
     this.word1.render(ctx);
     this.word2.render(ctx);
