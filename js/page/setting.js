@@ -74,11 +74,11 @@ export default class Template {
     ctx.textAlign = "center" //文字居中
     ctx.fillText('游戏设置', (Width - 300) / 2+150, 100);
     ctx.textAlign = tmpsta;
-    ctx.fillText('背景音乐', (Width - 300) / 2+40, 200);
+    ctx.fillText('背景音乐', (Width - 300) / 2+60, 200);
     this.bgmbtn.render(ctx);
-    ctx.fillText('音效', (Width - 300) / 2 + 40, 260);
+    ctx.fillText('音效', (Width - 300) / 2 + 60, 260);
     this.soundbtn.render(ctx);
-    ctx.fillText('夜间模式', (Width - 300) / 2 + 40, 320);
+    ctx.fillText('夜间模式', (Width - 300) / 2 + 60, 320);
     this.nightbtn.render(ctx);
     this.savebtn.render(ctx);
   }
