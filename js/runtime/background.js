@@ -6,7 +6,7 @@ let pagebus = new PageBus()
 const screenWidth  = window.innerWidth
 const screenHeight = window.innerHeight
 
-var BG_IMG_SRC = ['images/bg1.jpg', 'images/bg2.jpg', 'images/bg3.jpg', 'images/bg.jpg']
+var BG_IMG_SRC = ['images/bg1.jpg', 'images/bg2.jpg', 'images/bg3.jpg', 'images/bg4.jpg']
 const BG_WIDTH     = 512
 const BG_HEIGHT    = 512
 

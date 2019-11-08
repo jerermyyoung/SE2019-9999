@@ -21,10 +21,10 @@ export default class Template {
     this.boxbg=new Image();
     this.boxbg.src="images/boxbg.png";
     try {
-      this.bgmbtn = new StateBtn('', ['images/chose.png', 'images/chosen.png'], (Width + 300) / 2 - 80, 182, 20, 20, 'black', wx.getStorageSync('bgm'));
-      this.soundbtn = new StateBtn('', ['images/chose.png', 'images/chosen.png'], (Width + 300) / 2 - 80, 242, 20, 20, 'black', wx.getStorageSync('sound'));
-      this.nightbtn = new StateBtn('', ['images/chose.png', 'images/chosen.png'], (Width + 300) / 2 - 80, 302, 20, 20, 'black', wx.getStorageSync('night'));
-      this.savebtn = new Button('保存设置', 'images/btn.png', (Width - 200) / 2, 370, 200, 50);
+      this.bgmbtn = new StateBtn('', ['images/chose.png', 'images/chosen.png'], (Width + 300) / 2 - 80, 192, 20, 20, 'black', wx.getStorageSync('bgm'));
+      this.soundbtn = new StateBtn('', ['images/chose.png', 'images/chosen.png'], (Width + 300) / 2 - 80, 252, 20, 20, 'black', wx.getStorageSync('sound'));
+      this.nightbtn = new StateBtn('', ['images/chose.png', 'images/chosen.png'], (Width + 300) / 2 - 80, 312, 20, 20, 'black', wx.getStorageSync('night'));
+      this.savebtn = new Button('保存设置', 'images/btn.png', (Width - 200) / 2, 380, 200, 50);
     } catch (e) {
       console.log(e);
       // Do something when catch error
@@ -69,16 +69,18 @@ export default class Template {
      * 在canvas上画图
      *******************/
     ctx.drawImage(this.bg, 0, 0, systemInfo.windowWidth, systemInfo.windowHeight)
-    ctx.drawImage(this.boxbg,(Width-300)/2,50,300,400);
+    ctx.drawImage(this.boxbg,(Width-400)/2,50,400,500);
     let tmpsta = ctx.textAlign;
     ctx.textAlign = "center" //文字居中
-    ctx.fillText('游戏设置', (Width - 300) / 2+150, 100);
+    ctx.font = '30px Arial';
+    ctx.fillText('游戏设置', (Width)/2+50, 130);
+    ctx.font = '16px Arial';
     ctx.textAlign = tmpsta;
-    ctx.fillText('背景音乐', (Width - 300) / 2+40, 200);
+    ctx.fillText('背景音乐', (Width - 300) / 2+40, 210);
     this.bgmbtn.render(ctx);
-    ctx.fillText('音效', (Width - 300) / 2 + 40, 260);
+    ctx.fillText('音效', (Width - 300) / 2 + 40, 270);
     this.soundbtn.render(ctx);
-    ctx.fillText('夜间模式', (Width - 300) / 2 + 40, 320);
+    ctx.fillText('夜间模式', (Width - 300) / 2 + 40, 330);
     this.nightbtn.render(ctx);
     this.savebtn.render(ctx);
   }
