@@ -20,7 +20,7 @@ export default class Template {
     this.word1 = new Button('','images/bg1.jpg',Width/2-110,200,100,100);
     this.word2 = new Button('', 'images/bg2.jpg', Width/2+10, 200, 100, 100);
     this.word3 = new Button('', 'images/bg3.jpg', Width / 2 - 110, 350, 100, 100);
-    this.word4 = new Button('', 'images/bg.jpg', Width / 2 + 10, 350, 100, 100);
+    this.word4 = new Button('', 'images/bg4.jpg', Width / 2 + 10, 350, 100, 100);
     this.returnbtn = new Button('返回主页','images/btn.png',(Width-100)/2,480,100,50);
   }
   restart()//重置

@@ -28,7 +28,7 @@ export default class Template {
     //击落了n架飞机
     this.word4 = new Button('富可敌国', 'images/bg.jpg', Width / 2 + 10, 250, 80, 80);
     //拥有很多很多金钱
-    this.returnbtn = new Button('返回主页', 'images/btn.png', (Width - 100) / 2, 470, 100, 50);
+    this.returnbtn = new Button('返回主页', 'images/btn.png', (Width - 100) / 2, 480, 100, 50);
     this.text1 = new Button('点击上面的成就名字，', '', Width / 2 - 110, 340, 200, 50);
     this.text2 = new Button('会显示成就的具体内容', '', Width / 2 - 110, 390, 200, 50);
     this.text3 = new Button('', '', Width / 2 - 110, 430, 200, 50);
@@ -70,7 +70,7 @@ export default class Template {
      * 在canvas上画图
      *******************/
     ctx.drawImage(this.bg, 0, 0, systemInfo.windowWidth, systemInfo.windowHeight);
-    ctx.drawImage(this.boxbg, (Width - 300) / 2, 50, 300, 500);
+    ctx.drawImage(this.boxbg, (Width - 400) / 2, 50, 400, 500);
     ctx.font = '30px Arial';
     ctx.fillText('成就', Width / 2, 120)
     ctx.font = '16px Arial';
