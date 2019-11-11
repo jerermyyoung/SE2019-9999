@@ -1,10 +1,12 @@
 import Sprite from '../base/sprite'
 import Constants from '../common/constants'
+import PageBus from '../page/bus'
+let pagebus = new PageBus()
 
 const screenWidth  = window.innerWidth
 const screenHeight = window.innerHeight
 
-const BG_IMG_SRC   = 'images/bg.jpg'
+var BG_IMG_SRC = ['images/bg1.jpg', 'images/bg2.jpg', 'images/bg3.jpg', 'images/bg4.jpg']
 const BG_WIDTH     = 512
 const BG_HEIGHT    = 512
 
@@ -14,7 +16,7 @@ const BG_HEIGHT    = 512
  */
 export default class BackGround extends Sprite {
   constructor(ctx) {
-    super(BG_IMG_SRC, BG_WIDTH, BG_HEIGHT)
+    super(BG_IMG_SRC[pagebus.world-1], BG_WIDTH, BG_HEIGHT)
 
     this.render(ctx)
 

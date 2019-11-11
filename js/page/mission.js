@@ -24,12 +24,12 @@ export default class Template {
       {
         console.log(i*3+j)
         var newmission;
-        if(i*3+j==0)newmission = new Button(i*3+j+1, 'images/btn.png',Width/2+j*70-100,200+70*i,60,60);
-        else newmission = new Button(i * 3 + j + 1, 'images/btn3.png', Width / 2 + j * 70 - 100, 200 + 70 * i, 60, 60);
+        if(i*3+j==0)newmission = new Button(i*3+j+1, 'images/btn1.png',Width/2+j*70-100,200+70*i,60,60);
+        else newmission = new Button(i * 3 + j + 1, 'images/btn2.png', Width / 2 + j * 70 - 100, 200 + 70 * i, 60, 60);
         this.mission.push(newmission);
       }   
     }
-    this.returnbtn = new Button('选择世界', 'images/btn.png', (Width - 100) / 2, 470, 100, 50);
+    this.returnbtn = new Button('选择世界', 'images/btn.png', (Width - 100) / 2, 480, 100, 50);
   }
   restart()//重置
   {
@@ -68,9 +68,9 @@ export default class Template {
      * 在canvas上画图
      *******************/
     ctx.drawImage(this.bg, 0, 0, systemInfo.windowWidth, systemInfo.windowHeight);
-    ctx.drawImage(this.boxbg, (Width - 300) / 2, 50, 300, 500);
+    ctx.drawImage(this.boxbg, (Width - 400) / 2, 50, 400, 500);
     ctx.font = '30px Arial';
-    ctx.fillText('选择关卡', Width / 2, 120)
+    ctx.fillText('选择关卡', Width / 2+50, 130)
     ctx.font = '16px Arial';
     for(var i=0;i<4;i++)
     {

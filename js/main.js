@@ -209,7 +209,7 @@ export default class Main {
     databus.floatages.forEach( floatage => {
       if (this.player.isCollideWith(floatage)) {
         floatage.dispose()
-        Config.Bullet.Type = Util.findNext(Constants.Bullet.Types, Config.Bullet.Type)
+        if(Constants.Bullet.Types.indexOf(Config.Bullet.Type)<4)Config.Bullet.Type = Util.findNext(Constants.Bullet.Types, Config.Bullet.Type)
         Config.Bullet.Speed = Constants.Bullet.SpeedBase * (Constants.Bullet.Types.indexOf(Config.Bullet.Type) + 1)
         wx.showToast({
           title: '捕获未知漂浮物'
