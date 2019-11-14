@@ -17,23 +17,23 @@ module.exports = {
     Types: ['single', 'double', 'triple', 'quadruple', 'quintuple'],//子弹排数
   },
 
-  Floatage:{
+  Floatage: {
     Speed: 3 * 60,  //采用MotionTrack类的实体，其速度是真正以秒为单位
     SpawnRate: 0.2,
     SpawnMax: 3,//最多3个
     AnimUpdateRate: 4
   },
 
-  Freighter:{
+  Freighter: {
     Speed: 3,  //以一次更新为单位，且实际速度为1(扣除地图速度)
     SpawnRate: 0.2  //per second
   },
 
-  Background:{
+  Background: {
     Speed: 2
   },
 
-  Directions:{
+  Directions: {
     //in 4
     Down: 0,
     Left: 1,

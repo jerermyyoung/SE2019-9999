@@ -49,11 +49,11 @@ export default class Main {
     //1.两个主循环
     this.bindloopUpdate = this.loopUpdate.bind(this)
     this.bindloopRender = this.loopRender.bind(this)
-
+    this.touchHandler = this.touchEventHandler.bind(this);
     //2.不需重置的游戏数据、玩家操控处理机制
     ;//<--编译器BUG，不加";"会和下一语句拼成一句而出错
     ['touchstart', 'touchmove', 'touchend'].forEach((type) => {
-      canvas.addEventListener(type, this.touchEventHandler.bind(this))
+      canvas.addEventListener(type, this.touchHandler)
     })
     ;['UpdateRate', 'CtrlLayers.Background.DefaultActive', 'GodMode']
     .forEach(propName => {
@@ -78,7 +78,7 @@ export default class Main {
           })
         }
       })
-      let bannerAd = wx.createBannerAd({
+      this.bannerAd = wx.createBannerAd({
         adUnitId: 'xxxx', //迷の广告商人...
         style: {
           left: 10,
@@ -86,11 +86,13 @@ export default class Main {
           width: 320
         }
       })
-      bannerAd.show()
+      this.bannerAd.show()
     }
   }
   restart() {
     databus.reset()
+
+    Config.Bullet.Type = 'single';
 
     //0.与通用类的关联
     console.log(`Restart: Config.UpdateRate=${Config.UpdateRate}`)
@@ -103,6 +105,7 @@ export default class Main {
     this.player = new Player(ctx)
     this.gameinfo = new GameInfo()
     this.music = new Music()
+    this.music.playBgm();
     this.ctrlLayerUI = new ControlLayer('UI', [this.gameinfo])
     this.ctrlLayerSprites = new ControlLayer('Sprites', [this.player])
     this.ctrlLayerBackground = new ControlLayer('Background', [this.bg], 
@@ -121,6 +124,17 @@ export default class Main {
       this.bindloopRender,
       canvas
     )
+  }
+
+  remove()
+  {
+    ['touchstart', 'touchmove', 'touchend'].forEach((type) => {
+      canvas.removeEventListener(type, this.touchHandler)
+    });
+    window.cancelAnimationFrame(this.renderLoopId);
+    clearInterval(this.updateTimer);
+    this.bannerAd.destroy();
+    console.log('ok')
   }
 
   pause() {
@@ -248,6 +262,15 @@ export default class Main {
             //--- Game Status Switch ---
             case 'restart':
               this.restart()
+              // console.log('re start!')
+              break
+            case 'return':
+              this.remove();
+              pagebus.page=0;
+              break
+            case 'returnmission':
+              this.remove();
+              pagebus.page = 4;
               break
             case 'pause':
               this.pause()
@@ -362,7 +385,7 @@ export default class Main {
     // })
 
     this.gameinfo.renderGameScore(ctx, databus.score)
-
+    this.gameinfo.renderPause(ctx);//暂停游戏
     // 游戏结束停止帧循环
     if (databus.gameStatus == DataBus.GameOver) {
       this.gameinfo.renderGameOver(ctx, databus.score)
