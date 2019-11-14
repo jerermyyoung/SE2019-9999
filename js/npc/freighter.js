@@ -6,12 +6,14 @@ import DataBus from '../databus'
 const FREIGHTER_IMG_SRC = 'images/freighter.png'
 const FREIGHTER_WIDTH = 90
 const FREIGHTER_HEIGHT = 90
+const FREIGHTER_HP = 10
 
 let databus = new DataBus()
 
 export default class Freighter extends Enemy {
   constructor() {
     super(FREIGHTER_IMG_SRC, FREIGHTER_WIDTH, FREIGHTER_HEIGHT)
+	  this.hp = FREIGHTER_HP
   }
 
   destroy() {

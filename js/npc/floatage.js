@@ -87,6 +87,7 @@ export default class Floatage extends Sprite {
         true, undefined, FLOATAGE_ATLAS_TEXTURE.maxFrameHeight)
 
     this.motiontrack = new MotionTrack(MotionTrack.Types.Linear)
+    this.effect = Math.floor(Math.random()*3)
   }
 
   init(speed, x, y) {
@@ -117,6 +118,7 @@ export default class Floatage extends Sprite {
   dispose() {
     this.visible = false
     databus.removeFloatage(this)
+    return this.effect;
   }
 
   isActive() {
