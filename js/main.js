@@ -195,6 +195,7 @@ export default class Main {
     databus.floatages.forEach( floatage => {
       if (this.player.isCollideWith(floatage)) {
         let effect = floatage.dispose()
+        /*
         if(effect==0) {
           Config.Bullet.Type = Util.findNext(Constants.Bullet.Types, Config.Bullet.Type)
           Config.Bullet.Speed = Constants.Bullet.SpeedBase * (Constants.Bullet.Types.indexOf(Config.Bullet.Type) + 1)
@@ -202,6 +203,12 @@ export default class Main {
             title: '子弹增加'
           })
         }
+        */
+        Config.Bullet.Type = Util.findNext(Constants.Bullet.Types, Config.Bullet.Type)
+        Config.Bullet.Speed = Constants.Bullet.SpeedBase * (Constants.Bullet.Types.indexOf(Config.Bullet.Type) + 1)
+        wx.showToast({
+          title: '子弹增加'
+        })
       }
     })
 
