@@ -11,6 +11,9 @@ const PLAYER_IMG_SRC = 'images/hero.png'
 const PLAYER_WIDTH   = 80
 const PLAYER_HEIGHT  = 80
 
+const PLAYER_MAXHP = 100
+const PLAYER_MAXMP = 100
+
 let databus = new DataBus()
 
 const Config = require('../common/config.js').Config
@@ -25,6 +28,10 @@ export default class Player extends Sprite {
 
     // 用于在手指移动的时候标识手指是否已经在飞机上了
     this.touched = false
+
+    //记录当前的生命值与魔法值
+    this.hp=PLAYER_MAXHP
+    this.mp=PLAYER_MAXMP
 
   }
 
@@ -109,5 +116,30 @@ export default class Player extends Sprite {
       )
       databus.bullets.push(bullet)
     })
+  }
+
+  /**
+   * 提供修改[当前]血量、魔法量的方法，【只返回在0~HP/MP_MAX之间的非负值】
+   * 修改操作信息由外部给出
+   * 还可以添加除了hp值改变以外的、其他的变化到方法中
+   */
+  hpAdd(variation){
+    if(variation+this.hp > PLAYER_MAXHP)this.hp=PLAYER_MAXHP
+    else this.hp=variation+this.hp
+  }
+
+  hpReduce(variation){
+    if(this.hp-variation<0) this.hp=0
+    else this.hp=this.hp-variation
+  }
+
+  mpAdd(variation){
+    if(variation+this.mp > PLAYER_MAXMP) this.mp=PLAYER_MAXMP
+    else this.mp=variation+this.mp
+  }
+
+  mpReduce(variation){
+    if(this.mp-variation<0) this.mp=0
+    else this.mp=this.mp-variation
   }
 }
