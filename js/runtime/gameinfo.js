@@ -128,6 +128,11 @@ export default class GameInfo {
       10 + 20 + 10 + 20
     )
 
+    /*血条的简单实现
+    ctx.fillRect(80, 45, 80*(currentHP/100), 15)//尚未import玩家类，此时默认最大血量为100
+    ctx.strokeRect(80,45,80,15)
+    */
+
     ctx.fillStyle = "#0000ff"
     ctx.font      = "20px Arial"
     ctx.fillText(
@@ -136,6 +141,11 @@ export default class GameInfo {
       10 + 20 + 10 + 20 + 10 + 20
     )
 
+    /*蓝条的简单实现
+    ctx.fillRect(80, 75, 80*(currentMP/100), 15)//尚未import玩家类，此时默认最大蓝量为100
+    ctx.strokeRect(80,75,80,15)
+    */
+   
     this.areaSetting = {
       startX: 10,
       startY: 10,
