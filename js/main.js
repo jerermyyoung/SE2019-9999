@@ -222,9 +222,14 @@ export default class Main {
         let enemy = databus.enemys[i]
 
         if (this.player.isCollideWith(enemy)) {
-          databus.gameStatus = DataBus.GameOver
+          enemy.destroy();
+          this.player.hpReduce(Constants.Enemy.CollisionDamage)          
+          if(Constants.Bullet.Types.indexOf(Config.Bullet.Type)>0)Config.Bullet.Type = Util.findLast(Constants.Bullet.Types,Config.Bullet.Type)
 
-          break
+          if(this.player.hp == 0){
+            databus.gameStatus = DataBus.GameOver
+            break
+          }
         }
       }
     }
@@ -376,6 +381,7 @@ export default class Main {
     // })
 
     this.gameinfo.renderGameScore(ctx, databus.score)
+    this.gameinfo.renderPlayerStatus(ctx,this.player.hp,this.player.mp)
     this.gameinfo.renderPause(ctx);//暂停游戏
     // 游戏结束停止帧循环
     if (databus.gameStatus == DataBus.GameOver) {
