@@ -223,9 +223,13 @@ export default class Main {
 
         if (this.player.isCollideWith(enemy)) {
           enemy.destroy();
+
+          //与敌机碰撞时，由直接死亡变为生命值减少，同时暂时约定【子弹排数也减少1排】，后续可修改
           this.player.hpReduce(Constants.Enemy.CollisionDamage)          
           if(Constants.Bullet.Types.indexOf(Config.Bullet.Type)>0)Config.Bullet.Type = Util.findLast(Constants.Bullet.Types,Config.Bullet.Type)
 
+          //Game Over逻辑由死亡变更为生命值==0
+          //【注：此处的死亡判定暂时限定在碰撞敌机时，如果后面玩法扩充，需要再次补充死亡判定】
           if(this.player.hp == 0){
             databus.gameStatus = DataBus.GameOver
             break
