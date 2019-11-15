@@ -17,6 +17,17 @@ export default class Util {
     }
     return undefined
   }
+
+  //添加了findLast方法，返回值与findNext刚好相反，且同样【有循环】(即若value已经是第一个，则返回最后一个值)
+  static findLast(arr,value){
+    for(let i=0;i<arr.length;i++){
+      if(arr[i] == value){
+        if(i>0) return arr[i-1]
+        else return arr[arr.length-1]
+      }
+    }
+    return undefined
+  }
   
   static promiseImageLoad(imagePath) {
     let promise = new Promise((resolve, reject) => {
