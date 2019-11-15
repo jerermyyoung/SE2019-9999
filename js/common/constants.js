@@ -7,7 +7,8 @@
 module.exports = {
   Enemy: {
     Speed: 6,  //以一次更新为单位，且实际速度为4(扣除地图速度)、是玩家飞机缺省速度(即地图速度)的2倍
-    SpawnRate: 2  //per second，生成速度
+    SpawnRate: 2, //per second，生成速度
+    CollisionDamage: 25 //敌机与玩家碰撞时对玩家造成的伤害     
   },
 
   Bullet: {
