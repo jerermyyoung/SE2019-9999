@@ -8,12 +8,14 @@ import World from './js/page/world'
 import Mission from './js/page/mission'
 import Achievement from './js/page/achievement'
 import Store from './js/page/store'
+import Shop from './js/page/shop'
 
 /*
   新增界面: import XXX from './js/page/xxx'
 */
 
 let pagebus = new PageBus();
+let mystore = new Store()
 Object.defineProperty(pagebus, "page", {
   get: function () {
     return page
@@ -60,8 +62,8 @@ Object.defineProperty(pagebus, "page", {
         }
       case 6: //商店界面
         {
-          var A = new Store();
-          A.createShop();
+          pagebus.ctx.textAlign = "center"
+          new Shop(mystore)
           break;
         }
       /**
