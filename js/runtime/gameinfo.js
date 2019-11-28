@@ -309,6 +309,12 @@ export default class GameInfo {
       screenHeight / 2 - 60
     )
 
+    ctx.fillText(
+      '获得金钱: ' + score * 10,
+      screenWidth / 2,
+      screenHeight / 2 - 20
+    )
+
     ctx.drawImage(
       btn,
       screenWidth / 2 - 60,
