@@ -4,22 +4,41 @@ const MAPTOT = 3
 const LEVELTOT = 12
 
 export default class Store {
-  constructor() { //初始化的内容应该从存储文件中读取
-    this.money = 20000 
-    this.myplanes = new Array(false, false, false)
-    this.mycards = new Array(0, 0, 0, 0, 0, 0)
-    this.mylevel = new Array()
-    for (var i = 0; i < MAPTOT; i++) {
-      this.mylevel[i] = new Array()
-      for (var j = 0; j < LEVELTOT; j++) {
-        this.mylevel[i][j] = false
+  
+  constructor(b) {
+    if (!b){
+      this.money = 0
+      this.myplanes = new Array(false, false, false)
+      this.mycards = new Array(0, 0, 0, 0, 0, 0)
+      this.mylevel = new Array()
+      for (var i = 0; i < MAPTOT; i++) {
+        this.mylevel[i] = new Array()
+        for (var j = 0; j < LEVELTOT; j++) {
+          this.mylevel[i][j] = false
+        }
+      }
+      this.mylevel[0][0] = true
+    }
+    else{
+      this.money = b.money
+      this.myplanes = b.myplanes
+      this.mycards = b.mycards
+      this.mylevel = b.mylevel
+      for (var i = 0; i < MAPTOT; i++) {
+        this.mylevel[i] = b.mylevel[i]
+        for (var j = 0; j < LEVELTOT; j++) {
+          this.mylevel[i][j] = b.mylevel[i][j]
+        }
       }
     }
-    this.mylevel[0][0] = true
   }
 
   changeMoney(x) { //修改金钱接口
     this.money = x
+  }
+
+  increaseMoney(x){
+    this.money += x
   }
 
   howMuchMoney() { //查询金钱接口

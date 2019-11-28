@@ -100,6 +100,11 @@ export default class Template {
 
     if (this.back.isTapped(x, y) == true) {
       this.remove();
+      try {
+        wx.setStorageSync("userstore", this.storepoint)
+      } catch (e) {
+        console.log(e);
+      }
       pagebus.page = 0;
     }
 
