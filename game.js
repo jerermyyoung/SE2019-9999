@@ -16,7 +16,7 @@ import achieve_Store from './js/page/achieve_store'
 */
 
 let pagebus = new PageBus();
-let mystore = new Store()
+let mystore
 let achstore = new achieve_Store()
 Object.defineProperty(pagebus, "page", {
   get: function () {
@@ -28,6 +28,12 @@ Object.defineProperty(pagebus, "page", {
     {
       case 0: //主界面
       {
+          try {
+            mystore = new Store(wx.getStorageSync('userstore'))
+          }
+          catch (e) {
+            console.log(e)
+          }
         pagebus.ctx.textAlign = "center";//文字居中
         new Index();
         break;
