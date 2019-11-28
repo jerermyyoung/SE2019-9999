@@ -11,9 +11,18 @@ import ControlLayer from './base/controllayer'
 import Util from './common/util'
 import Constants from './common/constants'
 import PageBus from './page/bus'
+import Store from './page/store'
+
 let pagebus = new PageBus()
 let ctx = pagebus.ctx;
 let databus = new DataBus()
+let mystore
+try {
+  mystore = new Store(wx.getStorageSync('userstore'))
+}
+catch (e) {
+  console.log(e)
+}
 
 const Config = require('./common/config.js').Config
 
@@ -231,6 +240,8 @@ export default class Main {
           //Game Over逻辑由死亡变更为生命值==0
           //【注：此处的死亡判定暂时限定在碰撞敌机时，如果后面玩法扩充，需要再次补充死亡判定】
           if(this.player.hp == 0){
+            mystore.increaseMoney(databus.score * 10)
+            wx.setStorageSync("userstore", mystore)
             databus.gameStatus = DataBus.GameOver
             break
           }
