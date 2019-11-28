@@ -1,0 +1,413 @@
+import Player from '../player/index'
+import Enemy from '../npc/enemy'
+import Floatage from '../npc/floatage'
+import Freighter from '../npc/freighter'
+import BackGround from '../runtime/background'
+import GameInfo from '../runtime/gameinfo'
+import Music from '../runtime/music'
+import DataBus from '../databus'
+//import Config from './common/config'
+import ControlLayer from '../base/controllayer'
+import Util from '../common/util'
+import Constants from '../common/constants'
+import PageBus from '../page/bus'
+let pagebus = new PageBus()
+let ctx = pagebus.ctx;
+let databus = new DataBus()
+
+const Config = require('../common/config.js').Config
+
+
+// let button = wx.createUserInfoButton({ //创建用户授权按钮，注意：wx.authorize({scope: "scope.userInfo"})，无法弹出授权窗口
+//   type: 'text',
+//   text: '获取用户信息',
+//   style: {
+//     left: 10,
+//     top: 76,
+//     width: 200,
+//     height: 40,
+//     lineHeight: 40,
+//     backgroundColor: '#ff0000',
+//     color: '#ffffff',
+//     textAlign: 'center',
+//     fontSize: 16,
+//     borderRadius: 4
+//   }
+// })
+// button.onTap((res)=>{
+//   //获取用户信息
+// })
+
+
+/**
+ * 游戏主函数
+ */
+export default class Main {
+  constructor() {
+    console.log(`window.innerHeight = ${window.innerHeight}`)
+
+    //1.两个主循环
+    this.bindloopUpdate = this.loopUpdate.bind(this)
+    this.bindloopRender = this.loopRender.bind(this)
+    this.touchHandler = this.touchEventHandler.bind(this);
+    //2.不需重置的游戏数据、玩家操控处理机制
+    ;//<--编译器BUG，不加";"会和下一语句拼成一句而出错
+    ['touchstart', 'touchmove', 'touchend'].forEach((type) => {
+      canvas.addEventListener(type, this.touchHandler)
+    })
+      ;['UpdateRate', 'CtrlLayers.Background.DefaultActive', 'GodMode']
+        .forEach(propName => {
+          Config.subscribe(propName, this.onConfigChanged.bind(this))
+        })
+
+    //3.初次/重新启动
+    this.restart()
+
+    //4.其他：转发、广告...
+    {
+      wx.showShareMenu()
+      wx.updateShareMenu({
+        withShareTicket: true
+      })
+      wx.onShareAppMessage(function () {
+        return {
+          title: '增强版飞机大战',
+          imageUrl: canvas.toTempFilePathSync({
+            destWidth: 500,
+            destHeight: 900
+          })
+        }
+      })
+      this.bannerAd = wx.createBannerAd({
+        adUnitId: 'xxxx', //迷の广告商人...
+        style: {
+          left: 10,
+          top: 76,
+          width: 320
+        }
+      })
+      this.bannerAd.show()
+    }
+  }
+  restart() {
+    databus.reset()
+
+    Config.Bullet.Type = 'quintuple';
+
+    //0.与通用类的关联
+    console.log(`Restart: Config.UpdateRate=${Config.UpdateRate}`)
+
+    //1.需重置的游戏数据、玩家操控处理机制
+    this.updateInterval = 1000 / Config.UpdateRate
+    this.updateTimes = 0
+    this.lastRenderTime = new Date().getTime()
+    this.bg = new BackGround(ctx)
+    this.player = new Player(ctx)
+    this.gameinfo = new GameInfo()
+    this.music = new Music()
+    this.music.playBgm();
+    this.ctrlLayerUI = new ControlLayer('UI', [this.gameinfo])
+    this.ctrlLayerSprites = new ControlLayer('Sprites', [this.player])
+    this.ctrlLayerBackground = new ControlLayer('Background', [this.bg],
+      Config.CtrlLayers.Background.DefaultActive)  //this.CtrlLayers.Background.DefaultActive)
+
+    //2.两个主循环重启
+    if (this.updateTimer)
+      clearInterval(this.updateTimer)
+    this.updateTimer = setInterval(
+      this.bindloopUpdate,
+      this.updateInterval
+    )
+    if (this.renderLoopId)
+      window.cancelAnimationFrame(this.renderLoopId);
+    this.renderLoopId = window.requestAnimationFrame(
+      this.bindloopRender,
+      canvas
+    )
+  }
+
+  remove() {
+    ['touchstart', 'touchmove', 'touchend'].forEach((type) => {
+      canvas.removeEventListener(type, this.touchHandler)
+    });
+    window.cancelAnimationFrame(this.renderLoopId);
+    clearInterval(this.updateTimer);
+    this.bannerAd.destroy();
+    console.log('ok')
+  }
+
+  pause() {
+    if (databus.gameStatus == DataBus.GameOver)
+      return
+    databus.gameStatus = DataBus.GamePaused
+    this.ctrlLayerSprites.active = false//玩家飞机不再可移动
+    this.ctrlLayerBackground.active = false//背景不再滚动
+  }
+  resume() {
+    if (databus.gameStatus == DataBus.GameOver)//确认游戏已经结束
+      return
+    databus.gameStatus = DataBus.GameRunning
+    this.ctrlLayerSprites.active = true
+    this.ctrlLayerBackground.active = Config.CtrlLayers.Background.DefaultActive
+  }
+
+  /**
+   * 随着帧数变化的敌机生成逻辑
+   * 帧数取模定义成生成的频率
+   */
+  enemyGenerate() {
+    if ((this.updateTimes * Constants.Enemy.SpawnRate) % Config.UpdateRate
+      < Constants.Enemy.SpawnRate) {
+      let enemy = databus.pool.getItemByClass('enemy', Enemy)
+      enemy.init(Constants.Enemy.Speed)
+      databus.enemys.push(enemy)
+    }
+  }
+
+  //漂浮物生成逻辑
+  floatageGenerate() {
+    if ((this.updateTimes * Constants.Floatage.SpawnRate) % Config.UpdateRate
+      < Constants.Floatage.SpawnRate
+      && databus.floatages.length < Constants.Floatage.SpawnMax) {
+      let floatage = databus.pool.getItemByClass('floatage', Floatage)
+      floatage.init(Constants.Floatage.Speed)
+      databus.floatages.push(floatage)
+    }
+  }
+
+  //运输机生成逻辑
+  freighterGenerate() {
+    if ((this.updateTimes * Constants.Freighter.SpawnRate) % Config.UpdateRate
+      < Constants.Freighter.SpawnRate) {
+      let freighter = databus.pool.getItemByClass('freighter', Freighter)
+      freighter.init(Constants.Freighter.Speed)
+      databus.enemys.push(freighter)  //freighter is an enemy
+    }
+  }
+
+  // 全局碰撞检测
+  collisionDetection() {
+    let that = this
+
+    databus.bullets.forEach((bullet) => {
+      for (let i = 0, il = databus.enemys.length; i < il; i++) {
+        let enemy = databus.enemys[i]
+
+        if (enemy.isAlive() && enemy.isCollideWith(bullet)) {//循环检测碰撞
+          enemy.destroy()
+          bullet.destroy()
+          that.music.playExplosion()
+
+          databus.score += 1
+
+          break
+        }
+      }
+    })
+
+    databus.floatages.forEach(floatage => {
+      if (this.player.isCollideWith(floatage)) {
+        floatage.dispose()
+        if (Constants.Bullet.Types.indexOf(Config.Bullet.Type) < 4) Config.Bullet.Type = Util.findNext(Constants.Bullet.Types, Config.Bullet.Type)
+        Config.Bullet.Speed = Constants.Bullet.SpeedBase * (Constants.Bullet.Types.indexOf(Config.Bullet.Type) + 1)
+        wx.showToast({
+          title: '捕获未知漂浮物'
+        })
+      }
+    })
+
+    if (!Config.GodMode) {
+      for (let i = 0, il = databus.enemys.length; i < il; i++) {//游戏结束控制->待修改：敌机可以发射子弹
+        let enemy = databus.enemys[i]
+
+        if (this.player.isCollideWith(enemy)) {
+          enemy.destroy();
+
+          //与敌机碰撞时，由直接死亡变为生命值减少，同时暂时约定【子弹排数也减少1排】，后续可修改
+          //this.player.hpReduce(Constants.Enemy.CollisionDamage)
+          //if (Constants.Bullet.Types.indexOf(Config.Bullet.Type) > 0) Config.Bullet.Type = Util.findLast(Constants.Bullet.Types, Config.Bullet.Type)
+
+          //Game Over逻辑由死亡变更为生命值==0
+          //【注：此处的死亡判定暂时限定在碰撞敌机时，如果后面玩法扩充，需要再次补充死亡判定】
+          if (this.player.hp == 0) {
+            databus.gameStatus = DataBus.GameOver
+            break
+          }
+        }
+      }
+    }
+  }
+
+  //-- 游戏【操控】事件处理 ----
+  touchEventHandler(e) {
+    e.preventDefault()
+    let [x, y] = (e.type == 'touchstart' || e.type == 'touchmove') ?
+      [e.touches[0].clientX, e.touches[0].clientY] : [null, null]
+
+    //规则：1.只会从上层往下层传(只有捕获capture，没有冒泡bubble) 
+    //     2.当上层发生过处理时下层不再处理(parent-catch)
+    //     3.同一层中，有一个元素处理过（队头优先）其他元素即不再处理(sibling-catch)
+    let upperLayerHandled = false
+    for (let ctrlLayer of [this.ctrlLayerUI, this.ctrlLayerSprites, this.ctrlLayerBackground]) {
+      if (upperLayerHandled)
+        break //stop handling
+      if (!ctrlLayer.active)
+        continue //next layer
+      //console.log(`${e.type}: ${ctrlLayer.name}`)
+      ctrlLayer.elements.some((element) => {
+        //console.log(`${e.type}: ${element.__proto__.constructor.name}`)
+        element.onTouchEvent(e.type, x, y, ((res) => {
+          switch (res.message) {
+            //--- Game Status Switch ---
+            case 'restart':
+              this.restart()
+              // console.log('re start!')
+              break
+            case 'return':
+              this.remove();
+              pagebus.page = 0;
+              break
+            case 'returnmission':
+              this.remove();
+              pagebus.page = 4;
+              break
+            case 'pause':
+              this.pause()
+              break
+            case 'resume':
+              this.resume()
+              break
+            //--- Setting Commands ---
+            case 'switchUpdateRate':
+              Config.UpdateRate = Util.findNext(res.optionList, Config.UpdateRate)
+              break
+            case 'switchBulletSpeed':
+              Config.Bullet.Speed = Util.findNext(res.optionList, Config.Bullet.Speed)
+              break
+            case 'switchBulletType':
+              Config.Bullet.Type = Util.findNext(res.optionList, Config.Bullet.Type)
+              break
+            case 'youAreGod':
+              Config.GodMode = Util.findNext(res.optionList, Config.GodMode)
+              break
+            case 'backgroundActive':
+              Config.CtrlLayers.Background.DefaultActive = Util.findNext(res.optionList, Config.CtrlLayers.Background.DefaultActive)
+              break
+          }
+          if (res.message.length > 0) {
+            upperLayerHandled = true
+            return true //if any element handled the event, stop iteration
+          }
+        }).bind(this))
+      })
+    }
+
+  }
+
+  //-- 游戏数据【更新】主函数 ----
+  update(timeElapsed) {
+    if ([DataBus.GameOver, DataBus.GamePaused].indexOf(databus.gameStatus) > -1)
+      return
+
+    this.bg.update()
+
+    databus.bullets
+      .concat(databus.enemys)
+      .concat(databus.floatages)
+      .forEach((item) => {
+        item.update(timeElapsed)
+      })
+    for(let i=0;i<10;i++)
+      this.enemyGenerate()
+
+    //this.floatageGenerate()  //Freighters spawn floatages in turn
+
+    this.collisionDetection()
+
+    //即使GameOver仍可能发最后一颗子弹..仇恨的子弹..
+    if ((this.updateTimes * Constants.Bullet.SpawnRate) % Config.UpdateRate
+      < Constants.Bullet.SpawnRate) {
+      this.player.shoot()
+      this.music.playShoot()
+    }
+
+    //GameOver can only be caused by collisionDetection
+    if (databus.gameStatus == DataBus.GameOver) {
+      this.ctrlLayerSprites.active = false
+      this.ctrlLayerBackground.active = false
+    }
+  }
+
+  onConfigChanged(key, value, oldValue) {
+    console.log(`Main::onConfigChanged: ${key}=${value}`)
+    switch (key) {
+      case 'UpdateRate':
+        this.updateInterval = 1000 / Config.UpdateRate
+        if (this.updateTimer)
+          clearInterval(this.updateTimer)
+        this.updateTimer = setInterval(
+          this.bindloopUpdate,
+          this.updateInterval
+        )
+        break
+      case 'CtrlLayers.Background.DefaultActive':
+        wx.showToast({
+          title: Config.CtrlLayers.Background.DefaultActive ? '有效' : '无效',
+        })
+        break
+      case 'GodMode':
+        wx.showToast({
+          title: value ? '无敌！' : '小心，无敌取消',
+        })
+        break
+    }
+  }
+
+  //-- 游戏数据【渲染】主函数 ----
+  render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    this.bg.render(ctx)
+
+    databus.bullets
+      .concat(databus.enemys)
+      .concat(databus.floatages)
+      .forEach((item) => {
+        item.render(ctx)
+      })
+
+    this.player.render(ctx)
+
+    // databus.animations.forEach((anim) => {
+    //   anim.render(ctx)
+    // })
+
+    this.gameinfo.renderGameScore(ctx, databus.score)
+    this.gameinfo.renderPlayerStatus(ctx, this.player.hp, this.player.mp)
+    this.gameinfo.renderPause(ctx);//暂停游戏
+    // 游戏结束停止帧循环
+    if (databus.gameStatus == DataBus.GameOver) {
+      this.gameinfo.renderGameOver(ctx, databus.score)
+    }
+  }
+
+
+  //-- 游戏数据【更新】主循环 ----
+  loopUpdate() {//更新时间&次数
+    this.updateTimes++
+    let timeElapsed = new Date().getTime() - this.lastRenderTime
+    this.lastRenderTime = new Date().getTime()
+    this.update(timeElapsed)
+  }
+
+  //-- 游戏数据【渲染】主循环 ----
+  loopRender() {
+
+    this.render();
+    this.renderLoopId = window.requestAnimationFrame(
+      this.bindloopRender,
+      canvas
+    )
+  }
+
+}

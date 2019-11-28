@@ -9,7 +9,8 @@ import Mission from './js/page/mission'
 import Achievement from './js/page/achievement'
 import Store from './js/page/store'
 import Shop from './js/page/shop'
-
+import EntertainmentChoose from './js/page/entertainmentchoose'
+import Harvest from './js/entertainment/harvest'
 /*
   新增界面: import XXX from './js/page/xxx'
 */
@@ -21,6 +22,7 @@ Object.defineProperty(pagebus, "page", {
     return page
   },
   set: function (value) {
+    //console.log("value:");
     console.log(value); //value是 data改变后的值
     switch (value)
     {
@@ -64,6 +66,18 @@ Object.defineProperty(pagebus, "page", {
         {
           pagebus.ctx.textAlign = "center"
           new Shop(mystore)
+          break;
+        }
+      case 7: //娱乐模式界面
+        {
+          pagebus.ctx.textAlign = "center"
+          new EntertainmentChoose();
+          break;
+        }
+      case 8: //割草模式
+        {
+          pagebus.ctx.textAlign = "center"
+          new Harvest();
           break;
         }
       /**

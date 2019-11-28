@@ -17,11 +17,8 @@ export default class Template {
     this.bg.src = 'images/bg.jpg';
     this.boxbg = new Image();
     this.boxbg.src = "images/boxbg.png";
-    this.word1 = new Button('','images/bg1.jpg',Width/2-110,200,100,100);
-    this.word2 = new Button('', 'images/bg2.jpg', Width/2+10, 200, 100, 100);
-    this.word3 = new Button('', 'images/bg3.jpg', Width / 2 - 110, 350, 100, 100);
-    this.entertainmentbtn = new Button('娱乐模式', 'images/bg4.jpg', Width / 2 + 10, 350, 100, 100);
-    this.returnbtn = new Button('返回主页','images/btn.png',(Width-100)/2,480,100,50);
+    this.harvestbtn = new Button('割草模式', 'images/bg1.jpg', Width / 2 - 110, 200, 100, 100);
+    this.returnbtn = new Button('返回主页', 'images/btn.png', (Width - 100) / 2, 480, 100, 50);
   }
   restart()//重置
   {
@@ -62,12 +59,9 @@ export default class Template {
     ctx.drawImage(this.bg, 0, 0, systemInfo.windowWidth, systemInfo.windowHeight);
     ctx.drawImage(this.boxbg, (Width - 400) / 2, 50, 400, 500);
     ctx.font = '30px Arial';
-    ctx.fillText('选择世界', Width/2+50, 130)
+    ctx.fillText('选择模式', Width / 2 + 50, 130)
     ctx.font = '16px Arial';
-    this.word1.render(ctx);
-    this.word2.render(ctx);
-    this.word3.render(ctx);
-    this.entertainmentbtn.render(ctx);
+    this.harvestbtn.render(ctx);
     this.returnbtn.render(ctx);
   }
   touchEventHandler(e)//触屏检测，触发相应事件
@@ -80,33 +74,14 @@ export default class Template {
      * 拿到了触屏点击的坐标(x,y)和类型{touchstart或者touchmove或者touchend}
      * 检测每个控件是否被点击，并触发相应的事件。
      *******************/
-     if(this.word1.isTapped(x,y)==true)
-     {
-       pagebus.world=1;
-       this.remove();
-       pagebus.page=4;
-     }
-     else if (this.word2.isTapped(x, y) == true) {
-       pagebus.world = 2;
-       this.remove();
-       pagebus.page = 4;
-     }
-     else if (this.word3.isTapped(x, y) == true) {
-       pagebus.world = 3;
-       this.remove();
-       pagebus.page = 4;
-     }
-     else if (this.entertainmentbtn.isTapped(x, y) == true) {
-       this.remove();
-       pagebus.page = 7;
-     }
-     else if (this.returnbtn.isTapped(x,y)==true)
-     {
-       this.remove();
-       pagebus.page=0;
-     }
+    if (this.harvestbtn.isTapped(x, y) == true) {
+      pagebus.world = 1;
+      this.remove();
+      pagebus.page = 8;
+    }
+    else if (this.returnbtn.isTapped(x, y) == true) {
+      this.remove();
+      pagebus.page = 0;
+    }
   }
 }
-
-
-
