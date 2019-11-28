@@ -9,13 +9,10 @@ import Mission from './js/page/mission'
 import Achievement from './js/page/achievement'
 import Store from './js/page/store'
 import Shop from './js/page/shop'
-<<<<<<< HEAD
 import EntertainmentChoose from './js/page/entertainmentchoose'
 import Harvest from './js/entertainment/harvest'
-=======
 //import achieve_Store from './js/page/achieve_store'
 
->>>>>>> c5d7c3531e46c446f5c1a3ab78f8095a3ddd6b67
 /*
   新增界面: import XXX from './js/page/xxx'
 */
