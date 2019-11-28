@@ -1,12 +1,20 @@
 import PageBus from './bus' //引用page选择组件
 import Button from '../component/button'
-import Store from './achieve_store'
+import Store from './store'
 let pagebus = new PageBus();//选择页面的通信
 let ctx = pagebus.ctx;
 
 const systemInfo = wx.getSystemInfoSync()
 const Width = systemInfo.windowWidth;
 const Height = systemInfo.windowHeight;
+
+let mystore
+try {
+  mystore = new Store(wx.getStorageSync('userstore'))
+}
+catch (e) {
+  console.log(e)
+}
 
 var introcontext = canvas.getContext('2d')
 
@@ -17,11 +25,13 @@ export default class Template {
      * 初始化UI控件。
     *******************/
     
-    this.achieve_storepoint = b //记录存储状态
-    this.moneydata = this.achieve_storepoint.howMuchMoney()
-    this.numdata = this.achieve_storepoint.howMuchNum()
-    this.outputdata = this.achieve_storepoint.howMuchOutput()
-    this.leveldata = this.achieve_storepoint.howMuchLevel()
+    this.storepoint = b //记录存储状态
+    this.moneydata = this.storepoint.howMuchSummoney()
+    this.numdata = this.storepoint.howMuchNum()
+    this.outputdata = this.storepoint.howMuchOutput()
+    this.leveldata = this.storepoint.howMuchLevel()
+    this.shootdata = this.storepoint.howMuchShoot()
+    this.lastshootdata = this.storepoint.howMuchLastshoot()
 
     this.bg = new Image();
     this.bg.src = 'images/bg.jpg';
@@ -146,12 +156,12 @@ export default class Template {
     introcontext.font = "16px Arial"
     introcontext.fillStyle = "black"
     
-    this.numdata = this.achieve_storepoint.howMuchNum()
-    this.outputdata = this.achieve_storepoint.howMuchOutput()
-    this.leveldata = this.achieve_storepoint.howMuchLevel()
-    this.moneydata = this.achieve_storepoint.howMuchMoney()
-    this.shootdata = this.achieve_storepoint.howMuchShoot()
-    this.lastshootdata = this.achieve_storepoint.howMuchLastshoot()
+    this.numdata = this.storepoint.howMuchNum()
+    this.outputdata = this.storepoint.howMuchOutput()
+    this.leveldata = this.storepoint.howMuchLevel()
+    this.moneydata = this.storepoint.howMuchSummoney()
+    this.shootdata = this.storepoint.howMuchShoot()
+    this.lastshootdata = this.storepoint.howMuchLastshoot()
 
     switch (x) {
       case 1: {
@@ -182,10 +192,10 @@ export default class Template {
       }
       case 3: {
         this.text1 = new Button('输出机器：', '', Width / 2 - 110, 340, 200, 30);
-        this.text2 = new Button('累积击落500架敌机', '', Width / 2 - 110, 370, 220, 30);
+        this.text2 = new Button('累积击落200架敌机', '', Width / 2 - 110, 370, 220, 30);
         this.text3 = new Button('实际完成：', '', Width / 2 - 70, 400, 100, 30);
         this.text4 = new Button(this.outputdata, '', Width / 2 - 20, 400, 100, 30);
-        if (this.outputdata >= 500) {
+        if (this.outputdata >= 200) {
           this.text5 = new Button('已完成该成就', '', Width / 2 - 110, 430, 200, 30);
         }
         else {
@@ -195,10 +205,10 @@ export default class Template {
       }
       case 4: {
         this.text1 = new Button('富可敌国：', '', Width / 2 - 110, 340, 200, 30);
-        this.text2 = new Button('累积获得20000金币', '', Width / 2 - 110, 370, 220, 30);
+        this.text2 = new Button('累积获得2000金币', '', Width / 2 - 110, 370, 220, 30);
         this.text3 = new Button('实际完成：', '', Width / 2 - 70, 400, 100, 30);
         this.text4 = new Button(this.moneydata, '', Width / 2 - 20, 400, 100, 30);
-        if (this.moneydata >= 20000) {
+        if (this.moneydata >= 2000) {
           this.text5 = new Button('已完成该成就', '', Width / 2 - 110, 430, 200, 30);
         }
         else {
@@ -239,5 +249,16 @@ export default class Template {
 
 }
 
-
+/*
+//存入缓存
+if (this.back.isTapped(x, y) == true) {
+      this.remove();
+      try {
+        wx.setStorageSync("userstore", this.storepoint)
+      } catch (e) {
+        console.log(e);
+      }
+      pagebus.page = 0;
+    }
+*/
 
