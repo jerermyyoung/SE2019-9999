@@ -9,6 +9,7 @@ import Mission from './js/page/mission'
 import Achievement from './js/page/achievement'
 import Store from './js/page/store'
 import Shop from './js/page/shop'
+import achieve_Store from './js/page/achieve_store'
 
 /*
   新增界面: import XXX from './js/page/xxx'
@@ -16,6 +17,7 @@ import Shop from './js/page/shop'
 
 let pagebus = new PageBus();
 let mystore = new Store()
+let achstore = new achieve_Store()
 Object.defineProperty(pagebus, "page", {
   get: function () {
     return page
@@ -57,7 +59,7 @@ Object.defineProperty(pagebus, "page", {
       case 5: //成就界面
         {
           pagebus.ctx.textAlign = "center";
-          new Achievement();
+          new Achievement(achstore);
           break;
         }
       case 6: //商店界面
