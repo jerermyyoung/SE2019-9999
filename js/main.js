@@ -241,6 +241,9 @@ export default class Main {
           //【注：此处的死亡判定暂时限定在碰撞敌机时，如果后面玩法扩充，需要再次补充死亡判定】
           if(this.player.hp == 0){
             mystore.increaseMoney(databus.score * 10)
+            mystore.increaseSummoney(databus.score * 10)
+            mystore.increaseNum(1)
+            mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
             wx.setStorageSync("userstore", mystore)
             databus.gameStatus = DataBus.GameOver
             break
