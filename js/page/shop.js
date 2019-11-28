@@ -211,10 +211,10 @@ export default class Template {
     this.button_map = Array(3)
     for (var i = 0; i < 3; i++) {
       if (i == this.mappoint) {
-        this.button_map[i] = new Button(i, 'images/shop_img_mapbutton_1.png', canvas.width * 0.12 + canvas.width * 0.1 * i, canvas.width * 0.2, canvas.width * 0.08, canvas.width * 0.08) 
+        this.button_map[i] = new Button(i + 1, 'images/shop_img_mapbutton_1.png', canvas.width * 0.12 + canvas.width * 0.1 * i, canvas.width * 0.2, canvas.width * 0.08, canvas.width * 0.08) 
       }
       else {
-        this.button_map[i] = new Button(i, 'images/shop_img_mapbutton_0.png', canvas.width * 0.12 + canvas.width * 0.1 * i, canvas.width * 0.2, canvas.width * 0.08, canvas.width * 0.08)
+        this.button_map[i] = new Button(i + 1, 'images/shop_img_mapbutton_0.png', canvas.width * 0.12 + canvas.width * 0.1 * i, canvas.width * 0.2, canvas.width * 0.08, canvas.width * 0.08)
       }
     }
   }
@@ -242,6 +242,9 @@ export default class Template {
   buyLevel(n) {
     if (this.moneydata < this.levelvaldata[Math.floor(n / 3)]) {
       this.intro = new Button("您的金币不足", 'images/white.png', canvas.width * 0.1, canvas.height * 0.85, canvas.width * 0.8, canvas.height * 0.05)
+    }
+    else if (!this.storepoint.haveLevel(this.mappoint, n - 1)){
+      this.intro = new Button("您未解锁前一关卡", 'images/white.png', canvas.width * 0.1, canvas.height * 0.85, canvas.width * 0.8, canvas.height * 0.05)
     }
     else {
       this.moneydata -= this.levelvaldata[Math.floor(n / 3)]
