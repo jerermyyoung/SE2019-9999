@@ -17,12 +17,6 @@ let pagebus = new PageBus()
 let ctx = pagebus.ctx;
 let databus = new DataBus()
 let mystore
-try {
-  mystore = new Store(wx.getStorageSync('userstore'))
-}
-catch (e) {
-  console.log(e)
-}
 
 const Config = require('./common/config.js').Config
 
@@ -53,6 +47,13 @@ const Config = require('./common/config.js').Config
  */
 export default class Main {
   constructor() {
+    
+    try {
+      mystore = new Store(wx.getStorageSync('userstore'))
+    }
+    catch (e) {
+      console.log(e)
+    }
     console.log(`window.innerHeight = ${window.innerHeight}`)
 
     //1.两个主循环
@@ -147,14 +148,14 @@ export default class Main {
   }
 
   pause() {
-    if (databus.gameStatus == DataBus.GameOver)
+    if (databus.gameStatus == DataBus.GameOver || databus.gameStatus == DataBus.GameWin)
       return
     databus.gameStatus = DataBus.GamePaused
     this.ctrlLayerSprites.active = false//玩家飞机不再可移动
     this.ctrlLayerBackground.active = false//背景不再滚动
   }
   resume() {
-    if (databus.gameStatus == DataBus.GameOver)//确认游戏已经结束
+    if (databus.gameStatus == DataBus.GameOver || databus.gameStatus == DataBus.GameWin)//确认游戏已经结束
       return
     databus.gameStatus = DataBus.GameRunning
     this.ctrlLayerSprites.active = true
@@ -334,6 +335,12 @@ export default class Main {
               this.remove();
               pagebus.page = 4;
               break
+            case 'nextmission':
+            //下一关
+              this.remove();
+              pagebus.mission = pagebus.mission+1;
+              pagebus.page = 1;
+              break
             case 'pause':
               this.pause()
               break
@@ -369,7 +376,7 @@ export default class Main {
 
   //-- 游戏数据【更新】主函数 ----
   update(timeElapsed) {
-    if ([DataBus.GameOver, DataBus.GamePaused].indexOf(databus.gameStatus) > -1)
+    if ([DataBus.GameOver, DataBus.GamePaused, DataBus.GameWin].indexOf(databus.gameStatus) > -1)
       return
 
     this.bg.update()
@@ -395,8 +402,17 @@ export default class Main {
       this.music.playShoot()
     }
 
+    if (databus.score == 5) {//测试程序*************************************************************
+      databus.gameStatus = DataBus.GameWin;
+      //游戏获胜，解锁下一关卡。
+      console.log(pagebus.mission);
+      console.log(pagebus.world);
+      if(pagebus.mission+1<12)mystore.mylevel[pagebus.world][pagebus.mission+1]=true;
+      wx.setStorageSync("userstore", mystore)
+    }//**************************************************************************************** */
+
     //GameOver can only be caused by collisionDetection
-    if (databus.gameStatus == DataBus.GameOver) {
+    if (databus.gameStatus == DataBus.GameOver || databus.gameStatus == DataBus.GameWin) {
       this.ctrlLayerSprites.active = false
       this.ctrlLayerBackground.active = false
     }
@@ -453,6 +469,12 @@ export default class Main {
     if (databus.gameStatus == DataBus.GameOver) {
       this.gameinfo.renderGameOver(ctx, databus.score)
     }
+    //游戏获胜也停止循环
+    else if(databus.gameStatus == DataBus.GameWin)
+    {
+      this.gameinfo.renderGameWin(ctx, databus.score)
+    }
+    
   }
 
 

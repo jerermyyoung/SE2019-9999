@@ -11,6 +11,7 @@ import Store from './js/page/store'
 import Shop from './js/page/shop'
 import EntertainmentChoose from './js/page/entertainmentchoose'
 import Harvest from './js/entertainment/harvest'
+import HelpUI from './js/page/helpui'
 //import achieve_Store from './js/page/achieve_store'
 
 /*
@@ -89,6 +90,12 @@ Object.defineProperty(pagebus, "page", {
           new Harvest();
           break;
         }
+      case 9: //帮助界面
+      {
+          pagebus.ctx.textAlign = "center"
+          new HelpUI();
+          break;
+      }
       /**
        * 新增界面，例如:
        * case 2:

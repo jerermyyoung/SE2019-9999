@@ -24,7 +24,9 @@ const SettingCommands = {
 export default class GameInfo {
   constructor() {
     this.showGameOver = false
+    this.showGameWin = false
     this.ispaused = false
+    this.iswin=false
   }
 
   onTouchEvent(type, x, y, callback) {
@@ -49,7 +51,7 @@ export default class GameInfo {
             }
           })
         }
-        else if (!this.showGameOver && Util.inArea({ x, y }, this.areaPause)) {
+        else if (!this.showGameOver &&!this.showGameWin && Util.inArea({ x, y }, this.areaPause)) {
           this.ispaused = !this.ispaused;
           if (this.ispaused) callback({ message: 'pause' })
           else callback({ message: 'resume' })
@@ -66,6 +68,18 @@ export default class GameInfo {
         else if (this.showGameOver && Util.inArea({ x, y }, this.btnmission)) {
           callback({ message: 'returnmission' })
           this.showGameOver = false
+        }
+        else if (this.showGameWin && Util.inArea({ x, y }, this.btnmission)) {
+          callback({ message: 'returnmission' })
+          this.showGameWin = false
+        }
+        else if (this.showGameWin && Util.inArea({ x, y }, this.btnReturn)) {
+          callback({ message: 'return' })
+          this.showGameWin = false
+        }
+        else if (this.showGameWin && Util.inArea({ x, y }, this.btnnext)) {
+          callback({message:'nextmission'})
+          this.showGameWin = false
         }
         else if (this.ispaused && Util.inArea({ x, y }, this.btnRestart)) {
           callback({ message: 'restart' })
@@ -120,8 +134,8 @@ export default class GameInfo {
       //ctx.drawImage(atlas, 0, 0, 119, 108, screenWidth / 2 - 150, screenHeight / 2 - 200, 300, 400)
 
       ctx.fillStyle = "#000000"
-      ctx.font = "16px Arial"
-
+      
+      ctx.font = '20px Arial';
       // const grd = ctx.createLinearGradient(0, screenHeight / 2 - 90, 0, screenHeight / 2 - 100)
       // grd.addColorStop(0, '#f64f59')
       // grd.addColorStop(0.5, '#c471ed')
@@ -130,8 +144,9 @@ export default class GameInfo {
       ctx.fillText(
         '游戏暂停',
         screenWidth / 2,
-        screenHeight / 2 - 100
+        screenHeight / 2 - 80
       )
+      ctx.font = "16px Arial"
       ctx.fillStyle = "#000000"
 
       // ctx.fillText(
@@ -295,14 +310,14 @@ export default class GameInfo {
     //ctx.drawImage(atlas, 0, 0, 119, 108, screenWidth / 2 - 150, screenHeight / 2 - 200, 300, 400)
     ctx.drawImage(atlas, screenWidth / 2 - 150, screenHeight / 2 - 200, 300, 400)
     ctx.fillStyle = "#000000"
-    ctx.font = "16px Arial"
+    ctx.font = "20px Arial"
 
     ctx.fillText(
       '游戏结束',
       screenWidth / 2,
-      screenHeight / 2 - 100
+      screenHeight / 2 - 90
     )
-
+    ctx.font = "16px Arial"
     ctx.fillText(
       '得分: ' + score,
       screenWidth / 2,
@@ -312,7 +327,7 @@ export default class GameInfo {
     ctx.fillText(
       '获得金钱: ' + score * 10,
       screenWidth / 2,
-      screenHeight / 2 - 20
+      screenHeight / 2 - 30
     )
 
     ctx.drawImage(
@@ -380,6 +395,99 @@ export default class GameInfo {
     }
     pagebus.ctx.textAlign = "left";//文字
   }
-  
+  renderGameWin(ctx, score) {
+    pagebus.ctx.textAlign = "center";//文字居中
+    ctx.fillStyle = "rgb(0,0,0,0.5)";
+    ctx.fillRect(0, 0, screenWidth, screenHeight)
+    ctx.fillStyle = "#ffffff";
+    this.showGameWin= true
+    //ctx.drawImage(atlas, 0, 0, 119, 108, screenWidth / 2 - 150, screenHeight / 2 - 200, 300, 400)
+    ctx.drawImage(atlas, screenWidth / 2 - 150, screenHeight / 2 - 200, 300, 400)
+    ctx.fillStyle = "#000000"
+    ctx.font = "20px Arial"
+
+    ctx.fillText(
+      '游戏胜利',
+      screenWidth / 2,
+      screenHeight / 2 - 90
+    )
+    ctx.font = "16px Arial"
+    ctx.fillText(
+      '得分: ' + score,
+      screenWidth / 2,
+      screenHeight / 2 - 60
+    )
+
+    ctx.fillText(
+      '获得金钱: ' + score * 10,
+      screenWidth / 2,
+      screenHeight / 2 - 30
+    )
+
+    ctx.drawImage(
+      btn,
+      screenWidth / 2 - 60,
+      screenHeight / 2 - 20,
+      120, 40
+    )
+
+    ctx.fillText(
+      '下一关',
+      screenWidth / 2,
+      screenHeight / 2 + 5
+    )
+
+    ctx.drawImage(
+      btn,
+      screenWidth / 2 - 60,
+      screenHeight / 2 + 30,
+      120, 40
+    )
+
+    ctx.fillText(
+      '选择关卡',
+      screenWidth / 2,
+      screenHeight / 2 + 55
+    )
+
+    ctx.drawImage(
+      btn,
+      screenWidth / 2 - 60,
+      screenHeight / 2 + 80,
+      120, 40
+    )
+
+    ctx.fillText(
+      '返回主页',
+      screenWidth / 2,
+      screenHeight / 2 + 105
+    )
+
+    /**
+     * 重新开始按钮区域
+     * 方便简易判断按钮点击
+     */
+    this.btnnext = {
+      startX: screenWidth / 2 - 40,
+      startY: screenHeight / 2 - 20,
+      endX: screenWidth / 2 + 50,
+      endY: screenHeight / 2 + 20
+    }
+
+    this.btnmission = {
+      startX: screenWidth / 2 - 40,
+      startY: screenHeight / 2 + 30,
+      endX: screenWidth / 2 + 50,
+      endY: screenHeight / 2 + 70
+    }
+
+    this.btnReturn = {
+      startX: screenWidth / 2 - 40,
+      startY: screenHeight / 2 + 80,
+      endX: screenWidth / 2 + 50,
+      endY: screenHeight / 2 + 120
+    }
+    pagebus.ctx.textAlign = "left";//文字
+  }
 }
 

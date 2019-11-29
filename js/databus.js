@@ -79,3 +79,4 @@ export default class DataBus {
 DataBus.GameRunning = 0
 DataBus.GameOver = 1
 DataBus.GamePaused = 2
+DataBus.GameWin = 3

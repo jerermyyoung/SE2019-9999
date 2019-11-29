@@ -2,13 +2,23 @@ import PageBus from './bus' //引用page选择组件
 import Button from '../component/button'
 let pagebus = new PageBus();//选择页面的通信
 let ctx = pagebus.ctx;
+import Store from './store'
 
 const systemInfo = wx.getSystemInfoSync()
 const Width = systemInfo.windowWidth;
 const Height = systemInfo.windowHeight;
+let mystore
+
 
 export default class Template {
   constructor() {
+    try {
+      mystore = new Store(wx.getStorageSync('userstore'))
+      console.log(mystore.mylevel);
+    }
+    catch (e) {
+      console.log(e)
+    }
     this.restart();//初始重置
     /******************
      * 初始化UI控件。
@@ -24,8 +34,8 @@ export default class Template {
       {
         console.log(i*3+j)
         var newmission;
-        if(i*3+j==0)newmission = new Button(i*3+j+1, 'images/btn1.png',Width/2+j*70-100,200+70*i,60,60);
-        else newmission = new Button(i * 3 + j + 1, 'images/btn2.png', Width / 2 + j * 70 - 100, 200 + 70 * i, 60, 60);
+        if(mystore.mylevel[pagebus.world][i*3+j]==true)newmission = new Button(i*3+j+1, 'images/btn1.png',Width/2+j*70-100,200+70*i,60,60);
+        else newmission = new Button(i * 3 + j+1, 'images/btn2.png', Width / 2 + j * 70 - 100, 200 + 70 * i, 60, 60);
         this.mission.push(newmission);
       }   
     }
@@ -91,13 +101,23 @@ export default class Template {
      * 拿到了触屏点击的坐标(x,y)和类型{touchstart或者touchmove或者touchend}
      * 检测每个控件是否被点击，并触发相应的事件。
      *******************/
-     if(this.mission[0].isTapped(x,y)==true)
-     {
-       this.remove();
-       pagebus.mission=1;
-       pagebus.page=1;
-     }
-     else if(this.returnbtn.isTapped(x,y)==true)
+    for (var i = 0; i < 4; i++) {
+      for (var j = 0; j < 3; j++) {
+        if (mystore.mylevel[pagebus.world][i*3+j]==true&&this.mission[i*3+j].isTapped(x, y) == true)
+        {
+          this.remove();
+          pagebus.mission = i*3+j;
+          pagebus.page = 1;
+        }
+      }
+    }
+    //  if(this.mission[0].isTapped(x,y)==true)
+    //  {
+    //    this.remove();
+    //    pagebus.mission=1;
+    //    pagebus.page=1;
+    //  }
+     if(this.returnbtn.isTapped(x,y)==true)
      {
        this.remove();
        pagebus.page=3;

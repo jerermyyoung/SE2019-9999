@@ -16,7 +16,7 @@ const BG_HEIGHT    = 512
  */
 export default class BackGround extends Sprite {
   constructor(ctx) {
-    super(BG_IMG_SRC[pagebus.world-1], BG_WIDTH, BG_HEIGHT)
+    super(BG_IMG_SRC[pagebus.world], BG_WIDTH, BG_HEIGHT)
 
     this.render(ctx)
 

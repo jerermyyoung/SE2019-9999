@@ -82,17 +82,17 @@ export default class Template {
      *******************/
      if(this.word1.isTapped(x,y)==true)
      {
-       pagebus.world=1;
+       pagebus.world=0;
        this.remove();
        pagebus.page=4;
      }
      else if (this.word2.isTapped(x, y) == true) {
-       pagebus.world = 2;
+       pagebus.world = 1;
        this.remove();
        pagebus.page = 4;
      }
      else if (this.word3.isTapped(x, y) == true) {
-       pagebus.world = 3;
+       pagebus.world = 2;
        this.remove();
        pagebus.page = 4;
      }
