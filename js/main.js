@@ -222,6 +222,9 @@ export default class Main {
     })
 
     databus.floatages.forEach( floatage => {
+      if (floatage.lifetime()>6000) {
+        floatage.dispose()
+      }
       if (this.player.isCollideWith(floatage)) {
         let effect = floatage.dispose()
         if (effect==0) {

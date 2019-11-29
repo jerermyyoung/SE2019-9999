@@ -54,7 +54,6 @@ const FLOATAGE_ATLAS_TEXTURE = {
 const FLOATAGE_IMG_SRC = 'images/object.png'
 const FLOATAGE_WIDTH = 60  //不影响动画大小，但影响碰撞检测！
 const FLOATAGE_HEIGHT = 60
-const MAXTIME = 30000
 
 const __ = {
   speed: Symbol('speed'),
@@ -116,6 +115,11 @@ export default class Floatage extends Sprite {
     this.effect = Math.floor(Math.random()*3)
     this.spawntime = new Date()
   }
+  
+  lifetime() {
+    let nw =  new Date()
+    return nw - this.spawntime
+  }
 
   dispose() {
     this.visible = false
@@ -135,8 +139,7 @@ export default class Floatage extends Sprite {
       }
       let {x, y, direction} = this.motiontrack.nextStep()
       ;[this.x, this.y, this.direction] = [x, y, direction]
-      let nw = new Date()
-      if (this.y >= window.innerHeight + this.height || nw - this.spawntime > MAXTIME)
+      if (this.y >= window.innerHeight + this.height)
         this.dispose()  //对象回收
       this[__.animation].update(timeElapsed)
     }
