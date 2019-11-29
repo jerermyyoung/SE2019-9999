@@ -1,5 +1,6 @@
 import PageBus from './bus' //引用page选择组件
 import Button from '../component/button'
+import Music from '../runtime/music'
 let pagebus = new PageBus();//选择页面的通信
 let ctx = pagebus.ctx;
 
@@ -17,7 +18,7 @@ export default class Template {
     this.bg.src = 'images/bg.jpg';
     this.boxbg = new Image();
     this.boxbg.src = "images/boxbg.png";
-    this.harvestbtn = new Button('割草模式', 'images/bg1.jpg', Width / 2 - 110, 200, 100, 100);
+    this.harvestbtn = new Button('割草模式', 'images/bg4.jpg', Width / 2 - 110, 200, 100, 100);
     this.returnbtn = new Button('返回主页', 'images/btn.png', (Width - 100) / 2, 480, 100, 50);
   }
   restart()//重置
@@ -75,7 +76,8 @@ export default class Template {
      * 检测每个控件是否被点击，并触发相应的事件。
      *******************/
     if (this.harvestbtn.isTapped(x, y) == true) {
-      pagebus.world = 1;
+      pagebus.world = 3;
+      this.music.updateBgm();
       this.remove();
       pagebus.page = 8;
     }
