@@ -2,11 +2,12 @@ import Util from '../common/util'
 import Constants from '../common/constants'
 import PageBus from '../page/bus' //引用page选择组件
 import DataBus from '../databus'
+import Store from '../page/store'
 let databus = new DataBus();
 let pagebus = new PageBus();//选择页面的通信
 const screenWidth  = window.innerWidth
 const screenHeight = window.innerHeight
-
+let mystore
 let atlas = new Image()
 atlas.src = 'images/boxbg.png'
 let btn = new Image()
@@ -17,6 +18,7 @@ img1.src = "images/pause1.png"
 let img2 = new Image();
 img2.src = "images/pause2.png"
 
+
 const SettingCommands = {
   textList: ['每秒数据更新频率切换', '子弹速度切换', '子弹类型切换', '无敌模式切换', '背景层事件响应切换'],
   commandList: ['switchUpdateRate', 'switchBulletSpeed', 'switchBulletType', 'youAreGod', 'backgroundActive'],
@@ -25,10 +27,23 @@ const SettingCommands = {
 
 export default class GameInfo {
   constructor() {
+    try {
+      mystore = new Store(wx.getStorageSync('userstore'))
+    }
+    catch (e) {
+      console.log(e)
+    }
     this.showGameOver = false
     this.showGameWin = false
     this.ispaused = false
     this.iswin=false
+    this.tools = new Array();
+    for (var i = 0; i < 6; i++)//0 复活卡，1无敌卡，2轰炸卡，3加速卡，4补充卡，5无限卡
+    {
+      var x=new Image();
+      x.src ='images/shop_img_'+i+'.png';
+      this.tools.push(x);
+    }
   }
 
   onTouchEvent(type, x, y, callback) {
@@ -100,9 +115,25 @@ export default class GameInfo {
           this.ispaused = !this.ispaused;
           callback({ message: 'resume' })
         }
+        else for(var i=0;i<6;i++)
+        {
+          if (Util.inArea({ x, y }, {
+            startX: 5,
+            startY: screenHeight / 2 - 140 + i * 45,
+            endX: 45, 
+            endY: screenHeight / 2 - 140 + i * 45+40
+          }))
+          {
+            //使用第i号道具
+            callback({ message: 'tool'+i })
+            
+            break;
+          }
+        }
         break
     }
   }
+  
   renderPause(ctx)
   {
     
@@ -242,6 +273,25 @@ export default class GameInfo {
       pagebus.ctx.textAlign = "left";//
     }
   }
+  renderTools(ctx)
+  {
+    try {
+      mystore = new Store(wx.getStorageSync('userstore'))
+    }
+    catch (e) {
+      console.log(e)
+    }
+    ctx.fillStyle="white";
+    ctx.fillRect(0,screenHeight/2-150,60,290)
+    ctx.fillStyle="black";
+    for(var i=0;i<6;i++)
+    {
+      ctx.drawImage(this.tools[i],5,screenHeight/2-140+i*45,40,40);
+      ctx.font = "14px Arial"
+      ctx.fillText('' + mystore.mycards[i], 50, screenHeight / 2 - 100 + i * 45);
+      ctx.font = "16px Arial"
+    }
+  }
   renderGameScore(ctx, score) {
     ctx.fillStyle = "#ffffff"
     ctx.font      = "20px Arial"
@@ -268,12 +318,18 @@ export default class GameInfo {
     }
   }
 
-  renderPlayerStatus(ctx, currentHP,currentMP) {
+  renderPlayerStatus(ctx, currentHP,currentMP,hpinf,mpinf) {
     ctx.fillStyle = "#ff0000"
     ctx.font      = "20px Arial"
-    ctx.fillText(
+
+    if(hpinf==false)ctx.fillText(
       '❤ ' + currentHP, //设定图标
       10, 
+      10 + 20 + 10 + 20
+    )
+    else ctx.fillText(
+      '❤ ' + '无敌', //设定图标
+      10,
       10 + 20 + 10 + 20
     )
     /*血条的简单实现
@@ -283,9 +339,14 @@ export default class GameInfo {
 
     ctx.fillStyle = "#0000ff"
     ctx.font      = "20px Arial"
-    ctx.fillText(
+    if(mpinf==false)ctx.fillText(
       '💠 ' + currentMP, //设定图标
       10, 
+      10 + 20 + 10 + 20 + 10 + 20
+    )
+    else ctx.fillText(
+      '💠 无限' , //设定图标
+      10,
       10 + 20 + 10 + 20 + 10 + 20
     )
 

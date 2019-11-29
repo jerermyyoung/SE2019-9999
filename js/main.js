@@ -335,6 +335,24 @@ export default class Main {
               this.remove();
               pagebus.page = 4;
               break
+            case 'tool0':
+              this.usetool(0);
+              break;
+            case 'tool1':
+              this.usetool(1);
+              break;
+            case 'tool2':
+              this.usetool(2);
+              break;
+            case 'tool3':
+              this.usetool(3);
+              break;
+            case 'tool4':
+              this.usetool(4);
+              break;
+            case 'tool5':
+              this.usetool(5);
+              break;
             case 'nextmission':
             //下一关
               this.remove();
@@ -373,7 +391,34 @@ export default class Main {
     }
 
   }
-
+  usetool(idx)//使用几号道具 0 复活卡，1无敌卡，2轰炸卡，3加速卡，4补充卡，5无限卡
+  {
+    if (mystore.mycards[idx] > 0) mystore.mycards[idx]--;
+    else return;
+    switch (idx) {
+      case 0: {
+        break;
+      }
+      case 1: {
+        this.player.hpinf = true;
+        break;
+      }
+      case 2: {
+        break;
+      }
+      case 3: {
+        break;
+      }
+      case 4: {
+        break;
+      }
+      case 5: {
+        this.player.mpinf=true;
+        break;
+      }
+    }
+    wx.setStorageSync("userstore", mystore)
+  }
   //-- 游戏数据【更新】主函数 ----
   update(timeElapsed) {
     if ([DataBus.GameOver, DataBus.GamePaused, DataBus.GameWin].indexOf(databus.gameStatus) > -1)
@@ -482,8 +527,9 @@ export default class Main {
 
     this.gameinfo.renderGameScore(ctx, databus.score)
     
-    this.gameinfo.renderPlayerStatus(ctx,this.player.hp,this.player.mp)
+    this.gameinfo.renderPlayerStatus(ctx,this.player.hp,this.player.mp,this.player.hpinf,this.player.mpinf)
     this.gameinfo.renderPause(ctx);//暂停游戏
+    this.gameinfo.renderTools(ctx);//工具箱
     // 游戏结束停止帧循环
     if (databus.gameStatus == DataBus.GameOver) {
       this.gameinfo.renderGameOver(ctx, databus.score)

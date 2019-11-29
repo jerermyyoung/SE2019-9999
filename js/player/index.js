@@ -33,6 +33,9 @@ export default class Player extends Sprite {
     this.hp=PLAYER_MAXHP
     this.mp=PLAYER_MAXMP
 
+    //记录是否是无敌或者无限魔力
+    this.hpinf=false;
+    this.mpinf=false;
   }
 
   /**
@@ -129,6 +132,7 @@ export default class Player extends Sprite {
   }
 
   hpReduce(variation){
+    if(this.hpinf==true)return;
     if(this.hp-variation<0) this.hp=0
     else this.hp=this.hp-variation
   }
@@ -139,6 +143,7 @@ export default class Player extends Sprite {
   }
 
   mpReduce(variation){
+    if(this.mpinf==true)return;
     if(this.mp-variation<0) this.mp=0
     else this.mp=this.mp-variation
   }
