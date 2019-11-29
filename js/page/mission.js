@@ -1,8 +1,9 @@
 import PageBus from './bus' //引用page选择组件
 import Button from '../component/button'
+import Store from '../page/store'
 let pagebus = new PageBus();//选择页面的通信
 let ctx = pagebus.ctx;
-import Store from './store'
+
 
 const systemInfo = wx.getSystemInfoSync()
 const Width = systemInfo.windowWidth;
@@ -20,6 +21,7 @@ export default class Template {
       console.log(e)
     }
     this.restart();//初始重置
+    //console.log('mission re start!')
     /******************
      * 初始化UI控件。
     *******************/
@@ -32,9 +34,10 @@ export default class Template {
     {
       for (var j=0;j<3;j++)
       {
-        console.log(i*3+j)
         var newmission;
+
         if(mystore.mylevel[pagebus.world][i*3+j]==true)newmission = new Button(i*3+j+1, 'images/btn1.png',Width/2+j*70-100,200+70*i,60,60);
+
         else newmission = new Button(i * 3 + j+1, 'images/btn2.png', Width / 2 + j * 70 - 100, 200 + 70 * i, 60, 60);
         this.mission.push(newmission);
       }   
@@ -43,6 +46,7 @@ export default class Template {
   }
   restart()//重置
   {
+    let mystore = new Store(wx.getStorageSync('userstore'))
     this.bindLoop = this.loop.bind(this) //绑定渲染事件
     this.aniId = window.requestAnimationFrame(//界面重绘时执行 loop方法
       this.bindLoop,
@@ -93,6 +97,7 @@ export default class Template {
   }
   touchEventHandler(e)//触屏检测，触发相应事件
   {
+    let mystore = new Store(wx.getStorageSync('userstore'))
     e.preventDefault()
     let [x, y] = (e.type == 'touchstart' || e.type == 'touchmove') ?
       [e.touches[0].clientX, e.touches[0].clientY] : [null, null]
@@ -101,6 +106,7 @@ export default class Template {
      * 拿到了触屏点击的坐标(x,y)和类型{touchstart或者touchmove或者touchend}
      * 检测每个控件是否被点击，并触发相应的事件。
      *******************/
+
     for (var i = 0; i < 4; i++) {
       for (var j = 0; j < 3; j++) {
         if (mystore.mylevel[pagebus.world][i*3+j]==true&&this.mission[i*3+j].isTapped(x, y) == true)
@@ -122,6 +128,7 @@ export default class Template {
        this.remove();
        pagebus.page=3;
      }
+
   }
 }
 

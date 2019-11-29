@@ -10,7 +10,13 @@ module.exports = {
     SpawnRate: 2, //per second，生成速度
     CollisionDamage: 25 //敌机与玩家碰撞时对玩家造成的伤害     
   },
+  Boss:{
+    //写boss的同学在这里修改参数
+    Speed: 1,
+    //需要达到这个分数才能出现
+    score:[5,10,15,20,25,30,35,40,45,50,55,60]
 
+  },
   Bullet: {
     //Speed: configurable = true
     SpeedBase: 10,  //以一次更新为单位

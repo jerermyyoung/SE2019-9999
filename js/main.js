@@ -416,6 +416,13 @@ export default class Main {
       this.ctrlLayerSprites.active = false
       this.ctrlLayerBackground.active = false
     }
+    //游戏胜利不生成任何新敌机
+    if (databus.gameStatus == DataBus.GameWin) {
+      mystore.unlockedLevel(pagebus.world - 1, pagebus.mission)
+      this.ctrlLayerSprites.active = false
+      this.ctrlLayerBackground.active = false
+    }
+
   }
 
   onConfigChanged(key, value, oldValue){
@@ -463,18 +470,32 @@ export default class Main {
     // })
 
     this.gameinfo.renderGameScore(ctx, databus.score)
+    if (databus.score >= Constants.Boss.score[pagebus.mission-1]){
+      mystore.unlockedLevel(pagebus.world - 1, pagebus.mission)
+      mystore.increaseMoney(databus.score * 10)
+      mystore.increaseSummoney(databus.score * 10)
+      mystore.increaseNum(1)
+      mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
+      wx.setStorageSync("userstore", mystore)
+      databus.gameStatus = DataBus.GameWin
+      //console.log("===world===" + pagebus.world + "===mission===" +( pagebus.mission + 1));
+      
+
+
+    }
     this.gameinfo.renderPlayerStatus(ctx,this.player.hp,this.player.mp)
     this.gameinfo.renderPause(ctx);//暂停游戏
     // 游戏结束停止帧循环
     if (databus.gameStatus == DataBus.GameOver) {
       this.gameinfo.renderGameOver(ctx, databus.score)
     }
+
     //游戏获胜也停止循环
     else if(databus.gameStatus == DataBus.GameWin)
     {
       this.gameinfo.renderGameWin(ctx, databus.score)
     }
-    
+
   }
 
 

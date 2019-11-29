@@ -1,6 +1,8 @@
 import Util from '../common/util'
 import Constants from '../common/constants'
 import PageBus from '../page/bus' //引用page选择组件
+import DataBus from '../databus'
+let databus = new DataBus();
 let pagebus = new PageBus();//选择页面的通信
 const screenWidth  = window.innerWidth
 const screenHeight = window.innerHeight
@@ -310,6 +312,7 @@ export default class GameInfo {
     //ctx.drawImage(atlas, 0, 0, 119, 108, screenWidth / 2 - 150, screenHeight / 2 - 200, 300, 400)
     ctx.drawImage(atlas, screenWidth / 2 - 150, screenHeight / 2 - 200, 300, 400)
     ctx.fillStyle = "#000000"
+
     ctx.font = "20px Arial"
 
     ctx.fillText(
@@ -318,6 +321,7 @@ export default class GameInfo {
       screenHeight / 2 - 90
     )
     ctx.font = "16px Arial"
+
     ctx.fillText(
       '得分: ' + score,
       screenWidth / 2,
