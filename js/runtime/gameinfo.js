@@ -1,6 +1,8 @@
 import Util from '../common/util'
 import Constants from '../common/constants'
 import PageBus from '../page/bus' //引用page选择组件
+import DataBus from '../databus'
+let databus = new DataBus();
 let pagebus = new PageBus();//选择页面的通信
 const screenWidth  = window.innerWidth
 const screenHeight = window.innerHeight
@@ -296,12 +298,21 @@ export default class GameInfo {
     ctx.drawImage(atlas, screenWidth / 2 - 150, screenHeight / 2 - 200, 300, 400)
     ctx.fillStyle = "#000000"
     ctx.font = "16px Arial"
-
-    ctx.fillText(
-      '游戏结束',
-      screenWidth / 2,
-      screenHeight / 2 - 100
-    )
+    if (databus.gameStatus == DataBus.GameOver){
+      ctx.fillText(
+        '游戏结束',
+        screenWidth / 2,
+        screenHeight / 2 - 100
+      )
+    }
+    else{
+      ctx.fillText(
+        '游戏胜利',
+        screenWidth / 2,
+        screenHeight / 2 - 100
+      )
+    }
+    
 
     ctx.fillText(
       '得分: ' + score,

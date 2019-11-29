@@ -18,6 +18,7 @@ export default class Store {
         }
       }
       this.mylevel[0][0] = true
+      this.mylevel[0][1] = true
       
       //下面是成就界面的一些数据
       this.summoney = 0        //这里的money是不会减少的，表示的累积的钱            

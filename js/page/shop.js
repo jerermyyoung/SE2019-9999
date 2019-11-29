@@ -24,6 +24,7 @@ export default class Template {
     *******************/
     this.storepoint = b //记录存储状态
     this.moneydata = this.storepoint.howMuchMoney()
+    console.log("==money===" + this.moneydata );
     this.bg = new Image()
     this.bg.src = 'images/bg4.jpg'
     this.button_goods_state = 1
@@ -200,6 +201,8 @@ export default class Template {
           this.levelval[i * 3 + j] = new Button(this.levelvaldata[Math.floor((i * 3 + j) / 3)], 'images/shop_img_val.png', j * (GOODS_WIDTH * 1.5) + SHOP_IMG_START_X, i * (GOODS_HEIGHT * 1.5) + SHOP_IMG_START_Y + GOODS_HEIGHT * 1.06, GOODS_WIDTH, GOODS_HEIGHT * 0.4)
         }
         else {
+          let temp = i * 3 + j;
+          console.log("===mappoint===" + this.mappoint + "===mission===" + temp);
           this.levelimg[i * 3 + j] = new Button(i * 3 + j + 1, 'images/shop_img_level_1.png', j * (GOODS_WIDTH * 1.5) + SHOP_IMG_START_X, i * (GOODS_HEIGHT * 1.5) + SHOP_IMG_START_Y + GOODS_HEIGHT * 0.05, GOODS_WIDTH, GOODS_HEIGHT)
           this.levelval[i * 3 + j] = new Button('', '', 0, 0, 0, 0)
         }
