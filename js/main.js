@@ -401,27 +401,28 @@ export default class Main {
       this.player.shoot()
       this.music.playShoot()
     }
-
+    
     if (databus.score == 5) {//测试程序*************************************************************
       databus.gameStatus = DataBus.GameWin;
       //游戏获胜，解锁下一关卡。
-      console.log(pagebus.mission);
-      console.log(pagebus.world);
-      if(pagebus.mission+1<12)mystore.mylevel[pagebus.world][pagebus.mission+1]=true;
-      wx.setStorageSync("userstore", mystore)
+      // console.log(pagebus.mission);
+      // console.log(pagebus.world);
+      // if(pagebus.mission+1<12)mystore.mylevel[pagebus.world][pagebus.mission+1]=true;
+      // wx.setStorageSync("userstore", mystore)
     }//**************************************************************************************** */
-
+    //游戏胜利不生成任何新敌机
+    if (databus.gameStatus == DataBus.GameWin) {
+      if (pagebus.mission + 1 < 12) mystore.mylevel[pagebus.world][pagebus.mission + 1] = true;
+      wx.setStorageSync("userstore", mystore)
+      this.ctrlLayerSprites.active = false
+      this.ctrlLayerBackground.active = false
+    }
     //GameOver can only be caused by collisionDetection
     if (databus.gameStatus == DataBus.GameOver || databus.gameStatus == DataBus.GameWin) {
       this.ctrlLayerSprites.active = false
       this.ctrlLayerBackground.active = false
     }
-    //游戏胜利不生成任何新敌机
-    if (databus.gameStatus == DataBus.GameWin) {
-      mystore.unlockedLevel(pagebus.world - 1, pagebus.mission)
-      this.ctrlLayerSprites.active = false
-      this.ctrlLayerBackground.active = false
-    }
+    
 
   }
 
