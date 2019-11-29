@@ -12,7 +12,12 @@ export default class Util {
   static findNext(arr, value){
     for (let i = 0; i < arr.length; i++) {
       if (arr[i] === value) {
-        return arr[(i + 1) % arr.length]
+        if(i<arr.length-1) {
+          return arr[(i + 1) % arr.length]
+        }
+        else {
+          return arr[i]
+        }
       }
     }
     return undefined
