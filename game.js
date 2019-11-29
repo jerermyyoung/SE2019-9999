@@ -86,7 +86,7 @@ Object.defineProperty(pagebus, "page", {
         }
       case 8: //割草模式
         {
-          pagebus.ctx.textAlign = "center"
+          pagebus.ctx.textAlign = "left"
           new Harvest();
           break;
         }
