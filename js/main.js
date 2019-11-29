@@ -180,6 +180,7 @@ export default class Main {
   freighterGenerate() {
     if ((this.updateTimes * Constants.Freighter.SpawnRate) % Config.UpdateRate
       < Constants.Freighter.SpawnRate) {
+      
       let freighter = databus.pool.getItemByClass('freighter', Freighter)
       freighter.init(Constants.Freighter.Speed)
       databus.enemys.push(freighter)  //freighter is an enemy
@@ -208,21 +209,31 @@ export default class Main {
 
     databus.floatages.forEach( floatage => {
       if (this.player.isCollideWith(floatage)) {
-        let effect = floatage.dispose()
-        /*
-        if(effect==0) {
+        var effect = floatage.dispose()
+        if (effect==0) {
           Config.Bullet.Type = Util.findNext(Constants.Bullet.Types, Config.Bullet.Type)
           Config.Bullet.Speed = Constants.Bullet.SpeedBase * (Constants.Bullet.Types.indexOf(Config.Bullet.Type) + 1)
           wx.showToast({
             title: '子弹增加'
           })
         }
-        */
+        else if (effect==1){
+          wx.showToast({
+            title: 'HP增加'
+          })
+        }
+        else {
+          wx.showToast({
+            title: 'MP增加'
+          })
+        }
+        /*
         Config.Bullet.Type = Util.findNext(Constants.Bullet.Types, Config.Bullet.Type)
         Config.Bullet.Speed = Constants.Bullet.SpeedBase * (Constants.Bullet.Types.indexOf(Config.Bullet.Type) + 1)
         wx.showToast({
           title: '子弹增加'
         })
+        */
       }
     })
 

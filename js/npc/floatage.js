@@ -51,9 +51,11 @@ const FLOATAGE_ATLAS_TEXTURE = {
     }
   }
 }
+const IMG_SRC = ['images/object.png', 'images/object.png', 'images/object.png']
 const FLOATAGE_IMG_SRC = 'images/object.png'
 const FLOATAGE_WIDTH = 60  //不影响动画大小，但影响碰撞检测！
 const FLOATAGE_HEIGHT = 60
+const MAXTIME = 30000
 
 const __ = {
   speed: Symbol('speed'),
@@ -81,13 +83,13 @@ let atlasHeightIndex = (direction, directions) => {
 
 export default class Floatage extends Sprite {
 
-  constructor() {
+  constructor(effect) {
     super(FLOATAGE_IMG_SRC, FLOATAGE_WIDTH, FLOATAGE_HEIGHT)
     this[__.animation] = new Animation(Floatage.frames, Constants.Floatage.AnimUpdateRate, 0.75, 
         true, undefined, FLOATAGE_ATLAS_TEXTURE.maxFrameHeight)
 
     this.motiontrack = new MotionTrack(MotionTrack.Types.Linear)
-    this.effect = Math.floor(Math.random()*3)
+    this.spawntime = new Date()
   }
 
   init(speed, x, y) {
@@ -113,6 +115,8 @@ export default class Floatage extends Sprite {
 
     this.visible = true
     this[__.animation].start()
+    this.effect = Math.floor(Math.random() * 3)
+    //this.img.src = IMG_SRC[effect]
   }
 
   dispose() {
@@ -133,7 +137,8 @@ export default class Floatage extends Sprite {
       }
       let {x, y, direction} = this.motiontrack.nextStep()
       ;[this.x, this.y, this.direction] = [x, y, direction]
-      if (this.y >= window.innerHeight + this.height)
+      let nw = new Date()
+      if (this.y >= window.innerHeight + this.height || nw - this.spawntime > MAXTIME)
         this.dispose()  //对象回收
       this[__.animation].update(timeElapsed)
     }
