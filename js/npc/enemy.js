@@ -50,6 +50,10 @@ export default class Enemy extends Sprite {
     this[__.explosionAnim] = explosionAnim
   }
 
+  isEnemy() {
+    return true
+  }
+
   isAlive(){
     return this.visible
   }
