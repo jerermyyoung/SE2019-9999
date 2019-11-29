@@ -11,9 +11,18 @@ import ControlLayer from '../base/controllayer'
 import Util from '../common/util'
 import Constants from '../common/constants'
 import PageBus from '../page/bus'
+import Store from '../page/store'
+
 let pagebus = new PageBus()
 let ctx = pagebus.ctx;
 let databus = new DataBus()
+let mystore
+try {
+  mystore = new Store(wx.getStorageSync('userstore'))
+}
+catch (e) {
+  console.log(e)
+}
 
 const Config = require('../common/config.js').Config
 
@@ -179,6 +188,7 @@ export default class Main {
   freighterGenerate() {
     if ((this.updateTimes * Constants.Freighter.SpawnRate) % Config.UpdateRate
       < Constants.Freighter.SpawnRate) {
+
       let freighter = databus.pool.getItemByClass('freighter', Freighter)
       freighter.init(Constants.Freighter.Speed)
       databus.enemys.push(freighter)  //freighter is an enemy
@@ -207,12 +217,31 @@ export default class Main {
 
     databus.floatages.forEach(floatage => {
       if (this.player.isCollideWith(floatage)) {
-        floatage.dispose()
-        if (Constants.Bullet.Types.indexOf(Config.Bullet.Type) < 4) Config.Bullet.Type = Util.findNext(Constants.Bullet.Types, Config.Bullet.Type)
+        var effect = floatage.dispose()
+        if (effect == 0) {
+          Config.Bullet.Type = Util.findNext(Constants.Bullet.Types, Config.Bullet.Type)
+          Config.Bullet.Speed = Constants.Bullet.SpeedBase * (Constants.Bullet.Types.indexOf(Config.Bullet.Type) + 1)
+          wx.showToast({
+            title: '子弹增加'
+          })
+        }
+        else if (effect == 1) {
+          wx.showToast({
+            title: 'HP增加'
+          })
+        }
+        else {
+          wx.showToast({
+            title: 'MP增加'
+          })
+        }
+        /*
+        Config.Bullet.Type = Util.findNext(Constants.Bullet.Types, Config.Bullet.Type)
         Config.Bullet.Speed = Constants.Bullet.SpeedBase * (Constants.Bullet.Types.indexOf(Config.Bullet.Type) + 1)
         wx.showToast({
-          title: '捕获未知漂浮物'
+          title: '子弹增加'
         })
+        */
       }
     })
 
@@ -230,6 +259,11 @@ export default class Main {
           //Game Over逻辑由死亡变更为生命值==0
           //【注：此处的死亡判定暂时限定在碰撞敌机时，如果后面玩法扩充，需要再次补充死亡判定】
           if (this.player.hp == 0) {
+            mystore.increaseMoney(databus.score * 10)
+            mystore.increaseSummoney(databus.score * 10)
+            mystore.increaseNum(1)
+            mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
+            wx.setStorageSync("userstore", mystore)
             databus.gameStatus = DataBus.GameOver
             break
           }
@@ -269,7 +303,7 @@ export default class Main {
               break
             case 'returnmission':
               this.remove();
-              pagebus.page = 4;
+              pagebus.page = 7;
               break
             case 'pause':
               this.pause()
@@ -317,10 +351,12 @@ export default class Main {
       .forEach((item) => {
         item.update(timeElapsed)
       })
-    for(let i=0;i<10;i++)
-      this.enemyGenerate()
+    let random = Math.ceil(Math.random() * 10);
+    for(let i=0;i<random;i++)
+      this.enemyGenerate();
 
     //this.floatageGenerate()  //Freighters spawn floatages in turn
+    //this.freighterGenerate()
 
     this.collisionDetection()
 
@@ -382,7 +418,7 @@ export default class Main {
     //   anim.render(ctx)
     // })
 
-    this.gameinfo.renderGameScore(ctx, databus.score)
+    //this.gameinfo.renderGameScore(ctx, databus.score)
     this.gameinfo.renderPlayerStatus(ctx, this.player.hp, this.player.mp)
     this.gameinfo.renderPause(ctx);//暂停游戏
     // 游戏结束停止帧循环

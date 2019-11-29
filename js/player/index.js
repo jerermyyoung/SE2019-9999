@@ -124,7 +124,7 @@ export default class Player extends Sprite {
    * 还可以添加除了hp值改变以外的、其他的变化到方法中
    */
   hpAdd(variation){
-    if(variation+this.hp > PLAYER_MAXHP)this.hp=PLAYER_MAXHP
+    if(variation+this.hp > PLAYER_MAXHP) this.hp=PLAYER_MAXHP
     else this.hp=variation+this.hp
   }
 

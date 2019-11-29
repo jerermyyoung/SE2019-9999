@@ -115,14 +115,19 @@ export default class Floatage extends Sprite {
 
     this.visible = true
     this[__.animation].start()
-    this.effect = Math.floor(Math.random() * 3)
-    //this.img.src = IMG_SRC[effect]
+    this.effect = Math.floor(Math.random()*3)
+    this.spawntime = new Date()
+  }
+  
+  lifetime() {
+    let nw =  new Date()
+    return nw - this.spawntime
   }
 
   dispose() {
     this.visible = false
     databus.removeFloatage(this)
-    return this.effect;
+    return this.effect
   }
 
   isActive() {
