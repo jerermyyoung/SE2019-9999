@@ -204,7 +204,13 @@ export default class Main {
         let enemy = databus.enemys[i]
 
         if (enemy.isAlive() && enemy.isCollideWith(bullet)) {//循环检测碰撞
-          enemy.destroy()
+          if(enemy.freighter) {
+            enemy.hpReduce(Constants.Enemy.CollisionDamage)
+            if(enemy.hp == 0) enemy.destroy()
+          }
+          else {
+            enemy.destroy()
+          }
           bullet.destroy()
           that.music.playExplosion()
 
@@ -217,12 +223,50 @@ export default class Main {
 
     databus.floatages.forEach( floatage => {
       if (this.player.isCollideWith(floatage)) {
-        floatage.dispose()
-        if(Constants.Bullet.Types.indexOf(Config.Bullet.Type)<4)Config.Bullet.Type = Util.findNext(Constants.Bullet.Types, Config.Bullet.Type)
-        Config.Bullet.Speed = Constants.Bullet.SpeedBase * (Constants.Bullet.Types.indexOf(Config.Bullet.Type) + 1)
-        wx.showToast({
-          title: '捕获未知漂浮物'
-        })
+        let effect = floatage.dispose()
+        if (effect==0) {
+          if (Constants.Bullet.Types.indexOf(Config.Bullet.Type) < 4) {
+            Config.Bullet.Type = Util.findNext(Constants.Bullet.Types, Config.Bullet.Type)
+            Config.Bullet.Speed = Constants.Bullet.SpeedBase * (Constants.Bullet.Types.indexOf(Config.Bullet.Type) + 1)
+            wx.showToast({
+              title: '子弹增加'
+            })
+          }
+          else {
+            databus.score = databus.score + 10
+            wx.showToast({
+              title: '子弹已满，积分增加'
+            })
+          }
+        }
+        else if (effect==1) {
+          if(this.player.hp==100) {
+            databus.score=databus.score+10
+            wx.showToast({
+              title: 'HP已满，积分增加'
+            })
+          }
+          else {
+            this.player.hpAdd(Constants.Enemy.CollisionDamage) //magic number
+            wx.showToast({
+              title: 'HP增加'
+            })
+          }
+        }
+        else {
+          if (this.player.mp == 100) {
+            databus.score = databus.score + 10
+            wx.showToast({
+              title: 'MP已满，积分增加'
+            })
+          }
+          else {
+            this.player.mpAdd(Constants.Enemy.CollisionDamage) //magic number
+            wx.showToast({
+              title: 'MP增加'
+            })
+          }
+        }
       }
     })
 

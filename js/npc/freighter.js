@@ -6,12 +6,20 @@ import DataBus from '../databus'
 const FREIGHTER_IMG_SRC = 'images/freighter.png'
 const FREIGHTER_WIDTH = 90
 const FREIGHTER_HEIGHT = 90
+const FREIGHTER_MAXHP = 50
 
 let databus = new DataBus()
 
 export default class Freighter extends Enemy {
   constructor() {
     super(FREIGHTER_IMG_SRC, FREIGHTER_WIDTH, FREIGHTER_HEIGHT)
+    this.hp = FREIGHTER_MAXHP
+    this.freighter = true
+  }
+
+  hpReduce(variation) {
+    if (this.hp - variation < 0) this.hp = 0
+    else this.hp = this.hp - variation
   }
 
   destroy() {
