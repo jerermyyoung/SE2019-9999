@@ -1,5 +1,7 @@
+import PageBus from '../page/bus'
+let pagebus = new PageBus()
 let instance
-
+var bgm_dir = ['audio/bgm1.mp3', 'audio/bgm2.mp3', 'audio/bgm3.mp3', 'audio/bgm4.mp3']
 /**
  * 统一的音效管理器
  */
@@ -18,7 +20,7 @@ export default class Music {
     }
     this.bgmAudio = new Audio()
     this.bgmAudio.loop = true
-    this.bgmAudio.src  = 'audio/bgm.mp3'
+    this.bgmAudio.src = bgm_dir[pagebus.world]
 
     this.shootAudio     = new Audio()
     this.shootAudio.src = 'audio/bullet.mp3'
@@ -31,6 +33,13 @@ export default class Music {
 
   playBgm() {
     if(this.bgm==true)this.bgmAudio.play()
+  }
+  stopBgm(){
+    this.bgmAudio.pause();
+  }
+  updateBgm() {
+    this.bgmAudio.src = bgm_dir[pagebus.world]
+    //console.log("change bgm to " + this.bgmAudio.src)
   }
 
   playShoot() {

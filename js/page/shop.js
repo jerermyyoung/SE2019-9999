@@ -24,7 +24,7 @@ export default class Template {
     *******************/
     this.storepoint = b //记录存储状态
     this.moneydata = this.storepoint.howMuchMoney()
-    console.log("==money===" + this.moneydata );
+    //console.log("==money===" + this.moneydata );
     this.bg = new Image()
     this.bg.src = 'images/bg4.jpg'
     this.button_goods_state = 1

@@ -144,7 +144,7 @@ export default class Main {
     window.cancelAnimationFrame(this.renderLoopId);
     clearInterval(this.updateTimer);
     this.bannerAd.destroy();
-    console.log('ok')
+    //console.log('ok')
   }
 
   pause() {
@@ -325,13 +325,19 @@ export default class Main {
             //--- Game Status Switch ---
             case 'restart':
               this.restart()
+              this.music.playBgm();
+              this.music.updateBgm();
               // console.log('re start!')
               break
             case 'return':
               this.remove();
+              this.music.stopBgm();
+              this.music.updateBgm();
               pagebus.page=0;
               break
             case 'returnmission':
+              this.music.stopBgm();
+              this.music.updateBgm();
               this.remove();
               pagebus.page = 4;
               break
@@ -358,11 +364,17 @@ export default class Main {
               this.remove();
               pagebus.mission = pagebus.mission+1;
               pagebus.page = 1;
+              this.music.playBgm();
+              this.music.updateBgm();
               break
             case 'pause':
+              this.music.stopBgm();
+              this.music.updateBgm();
               this.pause()
               break
             case 'resume':
+              this.music.playBgm();
+              this.music.updateBgm();
               this.resume()
               break
             //--- Setting Commands ---

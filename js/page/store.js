@@ -7,7 +7,7 @@ export default class Store {
   
   constructor(b) {
     if (!b){
-      this.money = 0
+      this.money = 80000
       this.myplanes = new Array(false, false, false)
       this.mycards = new Array(0, 0, 0, 0, 0, 0)
       this.mylevel = new Array()
@@ -19,6 +19,8 @@ export default class Store {
       }
       this.mylevel[0][0] = true
       this.mylevel[0][1] = true
+      this.mylevel[1][0] = true
+      this.mylevel[2][0] = true
       
       //下面是成就界面的一些数据
       this.summoney = 0        //这里的money是不会减少的，表示的累积的钱            
