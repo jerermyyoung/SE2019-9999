@@ -402,14 +402,24 @@ export default class Main {
       this.music.playShoot()
     }
     
-    if (databus.score == 5) {//测试程序*************************************************************
-      databus.gameStatus = DataBus.GameWin;
-      //游戏获胜，解锁下一关卡。
-      // console.log(pagebus.mission);
-      // console.log(pagebus.world);
-      // if(pagebus.mission+1<12)mystore.mylevel[pagebus.world][pagebus.mission+1]=true;
-      // wx.setStorageSync("userstore", mystore)
-    }//**************************************************************************************** */
+    // if (databus.score == 5) {//测试程序*************************************************************
+    //   databus.gameStatus = DataBus.GameWin;
+    //   //游戏获胜，解锁下一关卡。
+    //   // console.log(pagebus.mission);
+    //   // console.log(pagebus.world);
+    //   // if(pagebus.mission+1<12)mystore.mylevel[pagebus.world][pagebus.mission+1]=true;
+    //   // wx.setStorageSync("userstore", mystore)
+    // }//**************************************************************************************** */
+    if (databus.score >= Constants.Boss.score[pagebus.mission]) {
+      mystore.unlockedLevel(pagebus.world, pagebus.mission)
+      mystore.increaseMoney(databus.score * 10)
+      mystore.increaseSummoney(databus.score * 10)
+      mystore.increaseNum(1)
+      mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
+      wx.setStorageSync("userstore", mystore)
+      databus.gameStatus = DataBus.GameWin
+      //console.log("===world===" + pagebus.world + "===mission===" +( pagebus.mission + 1));
+    }
     //游戏胜利不生成任何新敌机
     if (databus.gameStatus == DataBus.GameWin) {
       if (pagebus.mission + 1 < 12) mystore.mylevel[pagebus.world][pagebus.mission + 1] = true;
@@ -471,19 +481,7 @@ export default class Main {
     // })
 
     this.gameinfo.renderGameScore(ctx, databus.score)
-    if (databus.score >= Constants.Boss.score[pagebus.mission-1]){
-      mystore.unlockedLevel(pagebus.world - 1, pagebus.mission)
-      mystore.increaseMoney(databus.score * 10)
-      mystore.increaseSummoney(databus.score * 10)
-      mystore.increaseNum(1)
-      mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
-      wx.setStorageSync("userstore", mystore)
-      databus.gameStatus = DataBus.GameWin
-      //console.log("===world===" + pagebus.world + "===mission===" +( pagebus.mission + 1));
-      
-
-
-    }
+    
     this.gameinfo.renderPlayerStatus(ctx,this.player.hp,this.player.mp)
     this.gameinfo.renderPause(ctx);//暂停游戏
     // 游戏结束停止帧循环
