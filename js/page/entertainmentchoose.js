@@ -14,6 +14,7 @@ export default class Template {
     /******************
      * 初始化UI控件。
     *******************/
+    this.music = new Music()
     this.bg = new Image();
     this.bg.src = 'images/bg.jpg';
     this.boxbg = new Image();

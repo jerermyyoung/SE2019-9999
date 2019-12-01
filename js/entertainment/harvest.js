@@ -295,14 +295,20 @@ export default class Main {
             //--- Game Status Switch ---
             case 'restart':
               this.restart()
+              this.music.playBgm();
+              this.music.updateBgm();
               // console.log('re start!')
               break
             case 'return':
               this.remove();
+              this.music.stopBgm();
+              this.music.updateBgm();
               pagebus.page = 0;
               break
             case 'returnmission':
               this.remove();
+              this.music.stopBgm();
+              this.music.updateBgm();
               pagebus.page = 7;
               break
             case 'pause':
