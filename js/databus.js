@@ -23,6 +23,7 @@ export default class DataBus {
     this.bullets    = []
     this.enemys     = []
     this.floatages  = []
+    this.bosses     = []
     //this.animations = []  //不再需要
     this.gameStatus = DataBus.GameRunning
   }
@@ -54,6 +55,19 @@ export default class DataBus {
     this.pool.recover(enemy.constructor.name, enemy) //freighters has its own queue
   }
 
+  /**
+   * 回收boss，进入对象池
+   * 此后不进入帧循环
+   */
+  removeBoss(boss) {
+    let temp = (boss === undefined) ?
+      this.bosses.shift() : this.bosses.splice(this.bosses.indexOf(boss), 1)
+
+    temp.visible = false
+
+    this.pool.recover(boss.constructor.name, boss)
+  }
+  
   /**
    * 回收漂浮物，进入对象池
    * 此后不进入帧循环

@@ -86,6 +86,10 @@ export default class GameInfo {
           callback({ message: 'returnmission' })
           this.showGameOver = false
         }
+        else if (this.showGameOver && Util.inArea({ x, y }, this.btnShare)) {
+          callback({ message: 'share' })
+          this.showGameWin = false
+        }
         else if (this.showGameWin && Util.inArea({ x, y }, this.btnmission)) {
           callback({ message: 'returnmission' })
           this.showGameWin = false
@@ -96,6 +100,10 @@ export default class GameInfo {
         }
         else if (this.showGameWin && Util.inArea({ x, y }, this.btnnext)) {
           callback({message:'nextmission'})
+          this.showGameWin = false
+        }
+        else if (this.showGameWin && Util.inArea({ x, y }, this.btnShare)){
+          callback({ message: 'share' })
           this.showGameWin = false
         }
         else if (this.ispaused && Util.inArea({ x, y }, this.btnRestart)) {
@@ -397,40 +405,53 @@ export default class GameInfo {
     ctx.drawImage(
       btn,
       screenWidth / 2 - 60,
-      screenHeight / 2 - 20,
+      screenHeight / 2 - 25,
       120, 40
     )
 
     ctx.fillText(
       '重新开始',
       screenWidth / 2,
-      screenHeight / 2 + 5
+      screenHeight / 2
     )
 
     ctx.drawImage(
       btn,
       screenWidth / 2 - 60,
-      screenHeight / 2 + 30,
-      120, 40
-    )
-
-    ctx.fillText(
-      '返回主页',
-      screenWidth / 2,
-      screenHeight / 2 + 55
-    )
-
-    ctx.drawImage(
-      btn,
-      screenWidth / 2 - 60,
-      screenHeight / 2 + 80,
+      screenHeight / 2 + 25,
       120, 40
     )
 
     ctx.fillText(
       '选择关卡',
       screenWidth / 2,
-      screenHeight / 2 + 105
+      screenHeight / 2 + 50
+    )
+
+    ctx.drawImage(
+      btn,
+      screenWidth / 2 - 60,
+      screenHeight / 2 + 75,
+      120, 40
+    )
+
+    ctx.fillText(
+      '返回主页',
+      screenWidth / 2,
+      screenHeight / 2 + 100
+    )
+
+    ctx.drawImage(
+      btn,
+      screenWidth / 2 - 60,
+      screenHeight / 2 + 125,
+      120, 40
+    )
+
+    ctx.fillText(
+      '分享群聊',
+      screenWidth / 2,
+      screenHeight / 2 + 150
     )
 
     /**
@@ -439,24 +460,32 @@ export default class GameInfo {
      */
     this.btnRestart = {
       startX: screenWidth / 2 - 40,
-      startY: screenHeight / 2 - 20,
+      startY: screenHeight / 2 - 30,
       endX: screenWidth / 2 + 50,
-      endY: screenHeight / 2 + 20
+      endY: screenHeight / 2 + 15
     }
 
     this.btnReturn = {
       startX: screenWidth / 2 - 40,
-      startY: screenHeight / 2 + 30,
+      startY: screenHeight / 2 + 20,
       endX: screenWidth / 2 + 50,
-      endY: screenHeight / 2 + 70
+      endY: screenHeight / 2 + 65
     }
 
     this.btnmission = {
       startX: screenWidth / 2 - 40,
-      startY: screenHeight / 2 + 80,
+      startY: screenHeight / 2 + 70,
       endX: screenWidth / 2 + 50,
-      endY: screenHeight / 2 + 120
+      endY: screenHeight / 2 + 115
     }
+
+    this.btnShare = {
+      startX: screenWidth / 2 - 40,
+      startY: screenHeight / 2 + 120,
+      endX: screenWidth / 2 + 50,
+      endY: screenHeight / 2 + 165
+    }
+
     pagebus.ctx.textAlign = "left";//文字
   }
   renderGameWin(ctx, score) {
@@ -491,41 +520,55 @@ export default class GameInfo {
     ctx.drawImage(
       btn,
       screenWidth / 2 - 60,
-      screenHeight / 2 - 20,
+      screenHeight / 2 - 25,
       120, 40
     )
 
     ctx.fillText(
       '下一关',
       screenWidth / 2,
-      screenHeight / 2 + 5
+      screenHeight / 2 
     )
 
     ctx.drawImage(
       btn,
       screenWidth / 2 - 60,
-      screenHeight / 2 + 30,
+      screenHeight / 2 + 25,
       120, 40
     )
 
     ctx.fillText(
       '选择关卡',
       screenWidth / 2,
-      screenHeight / 2 + 55
+      screenHeight / 2 + 50
     )
 
     ctx.drawImage(
       btn,
       screenWidth / 2 - 60,
-      screenHeight / 2 + 80,
+      screenHeight / 2 + 75,
       120, 40
     )
 
     ctx.fillText(
       '返回主页',
       screenWidth / 2,
-      screenHeight / 2 + 105
+      screenHeight / 2 + 100
     )
+
+    ctx.drawImage(
+      btn,
+      screenWidth / 2 - 60,
+      screenHeight / 2 + 125,
+      120, 40
+    )
+
+    ctx.fillText(
+      '分享群聊',
+      screenWidth / 2,
+      screenHeight / 2 + 150
+    )
+
 
     /**
      * 重新开始按钮区域
@@ -533,24 +576,32 @@ export default class GameInfo {
      */
     this.btnnext = {
       startX: screenWidth / 2 - 40,
-      startY: screenHeight / 2 - 20,
+      startY: screenHeight / 2 - 30,
       endX: screenWidth / 2 + 50,
-      endY: screenHeight / 2 + 20
+      endY: screenHeight / 2 + 15
     }
 
     this.btnmission = {
       startX: screenWidth / 2 - 40,
-      startY: screenHeight / 2 + 30,
+      startY: screenHeight / 2 + 20,
       endX: screenWidth / 2 + 50,
-      endY: screenHeight / 2 + 70
+      endY: screenHeight / 2 + 65
     }
 
     this.btnReturn = {
       startX: screenWidth / 2 - 40,
-      startY: screenHeight / 2 + 80,
+      startY: screenHeight / 2 + 70,
       endX: screenWidth / 2 + 50,
-      endY: screenHeight / 2 + 120
+      endY: screenHeight / 2 + 115
     }
+
+    this.btnShare = {
+      startX: screenWidth / 2 - 40,
+      startY: screenHeight / 2 + 120,
+      endX: screenWidth / 2 + 50,
+      endY: screenHeight / 2 + 165
+    }
+
     pagebus.ctx.textAlign = "left";//文字
   }
 }

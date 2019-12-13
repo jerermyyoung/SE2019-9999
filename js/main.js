@@ -2,6 +2,7 @@ import Player from './player/index'
 import Enemy from './npc/enemy'
 import Floatage from './npc/floatage'
 import Freighter from './npc/freighter'
+import Boss from './npc/boss'
 import BackGround from './runtime/background'
 import GameInfo from './runtime/gameinfo'
 import Music from './runtime/music'
@@ -168,7 +169,7 @@ export default class Main {
    */
   enemyGenerate() {
     if ((this.updateTimes * Constants.Enemy.SpawnRate) % Config.UpdateRate
-      < Constants.Enemy.SpawnRate) {
+      < Constants.Enemy.SpawnRate & databus.score <= Constants.Boss.score[pagebus.mission]) {
       let enemy = databus.pool.getItemByClass('enemy', Enemy)
       enemy.init(Constants.Enemy.Speed)
       databus.enemys.push(enemy)
@@ -189,11 +190,21 @@ export default class Main {
   //运输机生成逻辑
   freighterGenerate() {
     if ((this.updateTimes * Constants.Freighter.SpawnRate) % Config.UpdateRate
-      < Constants.Freighter.SpawnRate) {
+      < Constants.Freighter.SpawnRate & databus.score <= Constants.Boss.score[pagebus.mission]) {
       
       let freighter = databus.pool.getItemByClass('freighter', Freighter)
       freighter.init(Constants.Freighter.Speed)
       databus.enemys.push(freighter)  //freighter is an enemy
+    }
+  }
+
+  //boss生成逻辑
+  bossGenerate() {
+    if (((this.updateTimes * Constants.Boss.SpawnRate) % Config.UpdateRate
+      < Constants.Boss.SpawnRate) /*& databus.score >= Constants.Boss.score[pagebus.mission]*/) {
+      let boss = databus.pool.getItemByClass('boss', Boss)
+      boss.init(Constants.Boss.Speed)
+      databus.bosses.push(boss)
     }
   }
 
@@ -219,6 +230,22 @@ export default class Main {
           databus.score += 1
 
           break
+        }
+      }
+    })
+
+    databus.bullets.forEach((bullet) => {
+      for (let i = 0, il = databus.bosses.length; i < il; i++) {
+        let boss = databus.bosses[i]
+        if (boss.isAlive() && boss.isCollideWith(bullet)) {//循环检测碰撞
+          boss.hpReduce(1)
+          bullet.destroy()
+          if (!boss.isAlive()) {
+            boss.destroy()
+            that.music.playExplosion()
+            databus.score += 10
+            break
+          }
         }
       }
     })
@@ -299,6 +326,30 @@ export default class Main {
           }
         }
       }
+
+      for (let i = 0, il = databus.bosses.length; i < il; i++) {//游戏结束控制->待修改：敌机可以发射子弹
+        let boss = databus.bosses[i]
+
+        if (this.player.isCollideWith(boss)) {
+          boss.destroy();
+
+          //与敌机碰撞时，由直接死亡变为生命值减少，同时暂时约定【子弹排数也减少1排】，后续可修改
+          this.player.hp=0;
+
+          //Game Over逻辑由死亡变更为生命值==0
+          //【注：此处的死亡判定暂时限定在碰撞敌机时，如果后面玩法扩充，需要再次补充死亡判定】
+          if (this.player.hp == 0) {
+            mystore.increaseMoney(databus.score * 10)
+            mystore.increaseSummoney(databus.score * 10)
+            mystore.increaseNum(1)
+            mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
+            wx.setStorageSync("userstore", mystore)
+            databus.gameStatus = DataBus.GameOver
+            break
+          }
+        }
+      }
+
     }
   }
 
@@ -366,6 +417,11 @@ export default class Main {
               pagebus.page = 1;
               this.music.playBgm();
               this.music.updateBgm();
+              break
+            case 'share':
+              wx.shareAppMessage({
+                title: '快来和我玩飞机吧',
+              });
               break
             case 'pause':
               this.music.stopBgm();
@@ -441,6 +497,7 @@ export default class Main {
     databus.bullets
       .concat(databus.enemys)
       .concat(databus.floatages)
+      .concat(databus.bosses)
       .forEach((item) => {
         item.update(timeElapsed)
       })
@@ -449,6 +506,8 @@ export default class Main {
 
     //this.floatageGenerate()  //Freighters spawn floatages in turn
     this.freighterGenerate()
+
+    this.bossGenerate()
 
     this.collisionDetection()
 
@@ -527,6 +586,7 @@ export default class Main {
     databus.bullets
       .concat(databus.enemys)
       .concat(databus.floatages)
+      .concat(databus.bosses)
       .forEach((item) => {
         item.render(ctx)
       })
