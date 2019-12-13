@@ -2,12 +2,14 @@ import Sprite from '../base/sprite'
 import Animation from '../base/animation'
 import AnimationBuilder from '../base/animbuilder'
 import DataBus from '../databus'
+import PageBus from '../page/bus'
+let pagebus = new PageBus()
 const Config = require('../common/config.js').Config
 
-const BOSS_IMG_SRC = 'images/boss.png'
+const BOSS_IMG_SRC = ['images/boss1.png', 'images/boss2.png', 'images/boss3.png', 'images/boss4.png']
 const BOSS_WIDTH = 150
-const BOSS_HEIGHT = 150
-const BOSS_HP = 10
+const BOSS_HEIGHT = 100
+const BOSS_HP = 10 
 
 
 const __ = {
@@ -25,7 +27,7 @@ export default class Boss extends Sprite {
 
   constructor(img_src, width, height) {
     if (img_src === undefined || width === undefined || height === undefined)
-      super(BOSS_IMG_SRC, BOSS_WIDTH, BOSS_HEIGHT)
+      super(BOSS_IMG_SRC[pagebus.world], BOSS_WIDTH, BOSS_HEIGHT)
     else
       super(img_src, width, height)
     this.hp = BOSS_HP
