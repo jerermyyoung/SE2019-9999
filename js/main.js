@@ -18,6 +18,10 @@ let pagebus = new PageBus()
 let ctx = pagebus.ctx;
 let databus = new DataBus()
 let mystore
+//这是一个关于敌机有没有生成的标志,true=可以生成
+let boss_flag=true
+//这是一个关于敌机有没有死亡的标志,true=活着
+let boss_life = true
 
 const Config = require('./common/config.js').Config
 
@@ -102,6 +106,8 @@ export default class Main {
   }
   restart() {
     databus.reset()
+    boss_flag = true
+    boss_life = true
 
     Config.Bullet.Type = 'single';
 
@@ -142,6 +148,8 @@ export default class Main {
     ['touchstart', 'touchmove', 'touchend'].forEach((type) => {
       canvas.removeEventListener(type, this.touchHandler)
     });
+    boss_flag = true
+    boss_life = true
     window.cancelAnimationFrame(this.renderLoopId);
     clearInterval(this.updateTimer);
     this.bannerAd.destroy();
@@ -200,12 +208,16 @@ export default class Main {
 
   //boss生成逻辑
   bossGenerate() {
-    if (((this.updateTimes * Constants.Boss.SpawnRate) % Config.UpdateRate
-      < Constants.Boss.SpawnRate) /*& databus.score >= Constants.Boss.score[pagebus.mission]*/) {
-      let boss = databus.pool.getItemByClass('boss', Boss)
-      boss.init(Constants.Boss.Speed)
-      databus.bosses.push(boss)
-    }
+    
+    //if (((this.updateTimes * Constants.Boss.SpawnRate) % Config.UpdateRate
+    //  < Constants.Boss.SpawnRate) /*& databus.score >= Constants.Boss.score[pagebus.mission]*/) {
+    //  let boss = databus.pool.getItemByClass('boss', Boss)
+    //  boss.init(Constants.Boss.Speed)
+    //  databus.bosses.push(boss)
+    //}
+    let boss = databus.pool.getItemByClass('boss', Boss)
+    boss.init(Constants.Boss.Speed)
+    databus.bosses.push(boss)
   }
 
   // 全局碰撞检测
@@ -242,6 +254,7 @@ export default class Main {
           bullet.destroy()
           if (!boss.isAlive()) {
             boss.destroy()
+            boss_life=false
             that.music.playExplosion()
             databus.score += 10
             break
@@ -332,6 +345,7 @@ export default class Main {
 
         if (this.player.isCollideWith(boss)) {
           boss.destroy();
+          boss_life = false
 
           //与敌机碰撞时，由直接死亡变为生命值减少，同时暂时约定【子弹排数也减少1排】，后续可修改
           this.player.hp=0;
@@ -507,8 +521,6 @@ export default class Main {
     //this.floatageGenerate()  //Freighters spawn floatages in turn
     this.freighterGenerate()
 
-    this.bossGenerate()
-
     this.collisionDetection()
 
     //即使GameOver仍可能发最后一颗子弹..仇恨的子弹..
@@ -527,6 +539,12 @@ export default class Main {
     //   // wx.setStorageSync("userstore", mystore)
     // }//**************************************************************************************** */
     if (databus.score >= Constants.Boss.score[pagebus.mission]) {
+      if (boss_flag){
+        this.bossGenerate()
+        boss_flag=false
+      }
+    }
+    if(!boss_life){
       mystore.unlockedLevel(pagebus.world, pagebus.mission)
       mystore.increaseMoney(databus.score * 10)
       mystore.increaseSummoney(databus.score * 10)
@@ -534,7 +552,6 @@ export default class Main {
       mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
       wx.setStorageSync("userstore", mystore)
       databus.gameStatus = DataBus.GameWin
-      //console.log("===world===" + pagebus.world + "===mission===" +( pagebus.mission + 1));
     }
     //游戏胜利不生成任何新敌机
     if (databus.gameStatus == DataBus.GameWin) {
