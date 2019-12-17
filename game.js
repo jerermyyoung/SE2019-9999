@@ -13,12 +13,13 @@ import EntertainmentChoose from './js/page/entertainmentchoose'
 import Harvest from './js/entertainment/harvest'
 import HitBoss from './js/entertainment/hitboss'
 import HelpUI from './js/page/helpui'
+import Timer from './js/component/timer.js'
 //import achieve_Store from './js/page/achieve_store'
 
 /*
   新增界面: import XXX from './js/page/xxx'
 */
-
+//new Timer(1);
 let pagebus = new PageBus();
 let mystore
 //let achstore = new achieve_Store()

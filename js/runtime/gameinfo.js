@@ -370,6 +370,25 @@ export default class GameInfo {
       endY: 10 + 25
     }
   }
+  renderRelive(ctx,cards)//是否复活
+  {
+    if(cards<=0)return ;
+    pagebus.ctx.textAlign = "center";//文字居中
+    ctx.fillStyle = "rgb(0,0,0,0.5)";
+    ctx.fillRect(0, 0, screenWidth, screenHeight)
+    ctx.fillStyle = "#ffffff";
+    ctx.drawImage(atlas, screenWidth / 2 - 150, screenHeight / 2 - 200, 300, 400)
+    ctx.fillStyle = "#000000"
+    ctx.font = "20px Arial"
+    ctx.fillText(
+      '提示',
+      screenWidth / 2,
+      screenHeight / 2 - 90
+    )
+    ctx.font = "16px Arial"
+    ctx.fillText('您有'+cards+'张复活卡，是否要使用?',screenWidth/2,screenHeight/2-60)
+    
+  }
 
   renderGameOver(ctx, score) {
     pagebus.ctx.textAlign = "center";//文字居中

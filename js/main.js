@@ -13,7 +13,7 @@ import Util from './common/util'
 import Constants from './common/constants'
 import PageBus from './page/bus'
 import Store from './page/store'
-
+import Timer from './component/timer.js'
 let pagebus = new PageBus()
 let ctx = pagebus.ctx;
 let databus = new DataBus()
@@ -24,7 +24,7 @@ let boss_flag=true
 let boss_life = true
 
 const Config = require('./common/config.js').Config
-
+const systemInfo = wx.getSystemInfoSync();
 
 // let button = wx.createUserInfoButton({ //创建用户授权按钮，注意：wx.authorize({scope: "scope.userInfo"})，无法弹出授权窗口
 //   type: 'text',
@@ -479,22 +479,37 @@ export default class Main {
     else return;
     switch (idx) {
       case 0: {
+        mystore.mycards[idx]++;
         break;
       }
       case 1: {
+        if(this.player.hpinf==true)
+        {
+          mystore.mycards[idx]++;
+          return ;
+        }
         this.player.hpinf = true;
+        this.tool1=null;//清空
+        
+        this.tool1 = new Timer(5, "无敌时间" ,true, systemInfo.windowWidth/2-100,50,200,10,'red');
         break;
       }
       case 2: {
+        
         break;
       }
       case 3: {
         break;
       }
       case 4: {
+        this.player.mpAdd(40);//增加40
         break;
       }
       case 5: {
+        if (this.player.mpinf == true) {
+          mystore.mycards[idx]++;
+          return;
+        }
         this.player.mpinf=true;
         break;
       }
@@ -619,6 +634,9 @@ export default class Main {
     this.gameinfo.renderPlayerStatus(ctx,this.player.hp,this.player.mp,this.player.hpinf,this.player.mpinf)
     this.gameinfo.renderPause(ctx);//暂停游戏
     this.gameinfo.renderTools(ctx);//工具箱
+    //工具计时器
+    if(this.tool1&&this.tool1.islive==true)this.tool1.render(ctx);
+    else this.player.hpinf=false;
     // 游戏结束停止帧循环
     if (databus.gameStatus == DataBus.GameOver) {
       this.gameinfo.renderGameOver(ctx, databus.score)
