@@ -36,6 +36,9 @@ export default class Player extends Sprite {
     //记录是否是无敌或者无限魔力
     this.hpinf=false;
     this.mpinf=false;
+
+    //记录是否轰炸
+    this.bomb=false;
   }
 
   /**
