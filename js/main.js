@@ -157,14 +157,14 @@ export default class Main {
   }
 
   pause() {
-    if (databus.gameStatus == DataBus.GameOver || databus.gameStatus == DataBus.GameWin)
+    if (databus.gameStatus == DataBus.GameOver || databus.gameStatus == DataBus.GameWin ||databus.gameStatus==DataBus.BeforeGameOver)
       return
     databus.gameStatus = DataBus.GamePaused
     this.ctrlLayerSprites.active = false//玩家飞机不再可移动
     this.ctrlLayerBackground.active = false//背景不再滚动
   }
   resume() {
-    if (databus.gameStatus == DataBus.GameOver || databus.gameStatus == DataBus.GameWin)//确认游戏已经结束
+    if (databus.gameStatus == DataBus.GameOver || databus.gameStatus == DataBus.GameWin || databus.gameStatus==DataBus.BeforeGameOver)//确认游戏已经结束
       return
     databus.gameStatus = DataBus.GameRunning
     this.ctrlLayerSprites.active = true
@@ -329,12 +329,14 @@ export default class Main {
           //Game Over逻辑由死亡变更为生命值==0
           //【注：此处的死亡判定暂时限定在碰撞敌机时，如果后面玩法扩充，需要再次补充死亡判定】
           if(this.player.hp == 0){
-            mystore.increaseMoney(databus.score * 10)
-            mystore.increaseSummoney(databus.score * 10)
-            mystore.increaseNum(1)
-            mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
-            wx.setStorageSync("userstore", mystore)
-            databus.gameStatus = DataBus.GameOver
+            databus.gameStatus=DataBus.BeforeGameOver;
+            if (mystore.mycards[0] <= 0) databus.gameStatus = DataBus.GameOver;//没有复活卡
+            // mystore.increaseMoney(databus.score * 10)
+            // mystore.increaseSummoney(databus.score * 10)
+            // mystore.increaseNum(1)
+            // mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
+            // wx.setStorageSync("userstore", mystore)
+            // databus.gameStatus = DataBus.GameOver
             break
           }
         }
@@ -353,12 +355,14 @@ export default class Main {
           //Game Over逻辑由死亡变更为生命值==0
           //【注：此处的死亡判定暂时限定在碰撞敌机时，如果后面玩法扩充，需要再次补充死亡判定】
           if (this.player.hp == 0) {
-            mystore.increaseMoney(databus.score * 10)
-            mystore.increaseSummoney(databus.score * 10)
-            mystore.increaseNum(1)
-            mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
-            wx.setStorageSync("userstore", mystore)
-            databus.gameStatus = DataBus.GameOver
+            databus.gameStatus = DataBus.BeforeGameOver;
+            if (mystore.mycards[0] <= 0) databus.gameStatus = DataBus.GameOver;//没有复活卡
+            // mystore.increaseMoney(databus.score * 10)
+            // mystore.increaseSummoney(databus.score * 10)
+            // mystore.increaseNum(1)
+            // mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
+            // wx.setStorageSync("userstore", mystore)
+            // databus.gameStatus = DataBus.GameOver
             break
           }
         }
@@ -406,9 +410,22 @@ export default class Main {
               this.remove();
               pagebus.page = 4;
               break
-            case 'tool0':
+            case 'relive': //复活
+              console.log('!!!!!')
               this.usetool(0);
+              console.log('复活吧')
               break;
+            case 'giveup': //不复活
+              mystore.increaseMoney(databus.score * 10)
+              mystore.increaseSummoney(databus.score * 10)
+              mystore.increaseNum(1)
+              mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
+              wx.setStorageSync("userstore", mystore)
+              databus.gameStatus = DataBus.GameOver
+              break;
+            // case 'tool0':
+            //   this.usetool(0);
+            //   break;
             case 'tool1':
               this.usetool(1);
               break;
@@ -475,11 +492,18 @@ export default class Main {
   }
   usetool(idx)//使用几号道具 0 复活卡，1无敌卡，2轰炸卡，3加速卡，4补充卡，5无限卡
   {
+    console.log(databus.gameStatus)
+    if (databus.gameStatus!=DataBus.GameRunning&&!(idx==0&&databus.gameStatus==DataBus.BeforeGameOver))return ;
     if (mystore.mycards[idx] > 0) mystore.mycards[idx]--;
     else return;
     switch (idx) {
-      case 0: {
-        mystore.mycards[idx]++;
+      case 0: {//复活
+        databus.gameStatus=DataBus.GameRunning;//重新运作
+        this.resume()
+        this.player.hp=100;//满血
+        this.player.setAirPosAcrossFingerPosZ(systemInfo.windowWidth/2, systemInfo.windowHeight-20)
+        console.log('复活')
+        //mystore.mycards[idx]++;
         break;
       }
       case 1: {
@@ -491,11 +515,11 @@ export default class Main {
         this.player.hpinf = true;
         this.tool1=null;//清空
         
-        this.tool1 = new Timer(5, "无敌时间" ,true, systemInfo.windowWidth/2-100,50,200,10,'red');
+        this.tool1 = new Timer(5, "无敌时间" ,true, systemInfo.windowWidth/2-100,systemInfo.windowHeight-50,200,10,'red');
         break;
       }
       case 2: {
-        
+
         break;
       }
       case 3: {
@@ -518,7 +542,7 @@ export default class Main {
   }
   //-- 游戏数据【更新】主函数 ----
   update(timeElapsed) {
-    if ([DataBus.GameOver, DataBus.GamePaused, DataBus.GameWin].indexOf(databus.gameStatus) > -1)
+    if ([DataBus.GameOver, DataBus.GamePaused, DataBus.GameWin, DataBus.BeforeGameOver].indexOf(databus.gameStatus) > -1)
       return
 
     this.bg.update()
@@ -580,7 +604,11 @@ export default class Main {
       this.ctrlLayerSprites.active = false
       this.ctrlLayerBackground.active = false
     }
-    
+    //待选择时不再生成敌机
+    if(databus.gameStatus==DataBus.BeforeGameOver){
+      this.ctrlLayerSprites.active = false
+      this.ctrlLayerBackground.active = false
+    }
 
   }
 
@@ -637,6 +665,11 @@ export default class Main {
     //工具计时器
     if(this.tool1&&this.tool1.islive==true)this.tool1.render(ctx);
     else this.player.hpinf=false;
+    //选择使用复活卡
+    if(databus.gameStatus == DataBus.BeforeGameOver)
+    {
+      this.gameinfo.renderRelive(ctx,mystore.mycards[0])
+    }
     // 游戏结束停止帧循环
     if (databus.gameStatus == DataBus.GameOver) {
       this.gameinfo.renderGameOver(ctx, databus.score)
