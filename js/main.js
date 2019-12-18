@@ -549,9 +549,21 @@ export default class Main {
   useUltraSkill(){
     if(this.player.mpinf==false) this.player.mp-=100;
     for (let i = 0, il = databus.enemys.length; i < il; i++){
-      let enemy=databus.enemys[i];      
-      enemy.destroy();
+      let enemy=databus.enemys[i]
+      enemy.destroy()
     }
+
+    for (let i = 0, il = databus.bosses.length; i < il; i++){
+      let boss=databus.bosses[i]
+      boss.hpReduce(3)
+      if (!boss.isAlive()) {
+        boss.destroy()
+        boss_life=false
+        that.music.playExplosion()
+        databus.score += 10
+        break
+      }
+    }    
   }
 
   //-- 游戏数据【更新】主函数 ----
