@@ -35,6 +35,7 @@ export default class GameInfo {
     }
     this.showGameOver = false
     this.showGameWin = false
+    this.showGameRelive=false
     this.ispaused = false
     this.iswin=false
     this.tools = new Array();
@@ -68,7 +69,7 @@ export default class GameInfo {
             }
           })
         }
-        else if (!this.showGameOver &&!this.showGameWin && Util.inArea({ x, y }, this.areaPause)) {
+        else if (!this.showGameRelive&&!this.showGameOver &&!this.showGameWin && Util.inArea({ x, y }, this.areaPause)) {
           this.ispaused = !this.ispaused;
           if (this.ispaused) callback({ message: 'pause' })
           else callback({ message: 'resume' })
@@ -99,12 +100,21 @@ export default class GameInfo {
           this.showGameWin = false
         }
         else if (this.showGameWin && Util.inArea({ x, y }, this.btnnext)) {
-          callback({message:'nextmission'})
+          if(pagebus.mission!=11)callback({message:'nextmission'})
           this.showGameWin = false
         }
         else if (this.showGameWin && Util.inArea({ x, y }, this.btnShare)){
           callback({ message: 'share' })
           this.showGameWin = false
+        }
+        else if (this.showGameRelive && Util.inArea({ x, y }, this.btnYes))
+        {
+          callback({message: 'relive'});//复活
+          this.showGameRelive=false;
+        }
+        else if (this.showGameRelive && Util.inArea({ x, y }, this.btnNo)) {
+          callback({ message: 'giveup' });//不复活
+          this.showGameRelive = false;
         }
         else if (this.ispaused && Util.inArea({ x, y }, this.btnRestart)) {
           callback({ message: 'restart' })
@@ -123,7 +133,7 @@ export default class GameInfo {
           this.ispaused = !this.ispaused;
           callback({ message: 'resume' })
         }
-        else for(var i=0;i<6;i++)
+        else for(var i=1;i<6;i++)
         {
           if (Util.inArea({ x, y }, {
             startX: 5,
@@ -370,6 +380,61 @@ export default class GameInfo {
       endY: 10 + 25
     }
   }
+  renderRelive(ctx,cards)//是否复活
+  {
+    if(cards<=0)return ;
+    this.showGameRelive = true;
+    pagebus.ctx.textAlign = "center";//文字居中
+    ctx.fillStyle = "rgb(0,0,0,0.5)";
+    ctx.fillRect(0, 0, screenWidth, screenHeight)
+    ctx.fillStyle = "#ffffff";
+    ctx.drawImage(atlas, screenWidth / 2 - 200, screenHeight / 2 - 200, 400, 200)
+    ctx.fillStyle = "#000000"
+    ctx.font = "20px Arial"
+    ctx.fillText(
+      '提示',
+      screenWidth / 2,
+      screenHeight / 2 - 120
+    )
+    ctx.font = "16px Arial"
+    ctx.fillText('您有'+cards+'张复活卡，是否要使用?',screenWidth/2,screenHeight/2-90)
+    ctx.drawImage(
+      btn,
+      screenWidth / 2 - 30-50,//-30
+      screenHeight / 2 - 75,
+      60, 40
+    )
+    ctx.fillText(
+      '是',
+      screenWidth / 2-50,
+      screenHeight / 2-50
+    )
+    ctx.drawImage(
+      btn,
+      screenWidth / 2 - 30 + 50,//-30
+      screenHeight / 2 - 75,
+      60, 40
+    )
+    ctx.fillText(
+      '否',
+      screenWidth / 2 + 50,
+      screenHeight / 2 - 50
+    )
+    this.btnYes = {
+      startX: screenWidth / 2 - 80,
+      startY: screenHeight / 2 - 75,
+      endX: screenWidth / 2 -20,
+      endY: screenHeight / 2 - 35
+    }
+
+    this.btnNo = {
+      startX: screenWidth / 2 +20,
+      startY: screenHeight / 2 - 75,
+      endX: screenWidth / 2 + 80,
+      endY: screenHeight / 2 - 35
+    }
+    pagebus.ctx.textAlign = "left";//文字
+  }
 
   renderGameOver(ctx, score) {
     pagebus.ctx.textAlign = "center";//文字居中
@@ -523,8 +588,15 @@ export default class GameInfo {
       screenHeight / 2 - 25,
       120, 40
     )
-
-    ctx.fillText(
+    if(pagebus.mission==11)
+    {
+      ctx.fillText(
+        '已通关',
+        screenWidth / 2,
+        screenHeight / 2
+      )
+    }
+    else ctx.fillText(
       '下一关',
       screenWidth / 2,
       screenHeight / 2 

@@ -1,30 +1,30 @@
-import Player from './player/index'
-import Enemy from './npc/enemy'
-import Floatage from './npc/floatage'
-import Freighter from './npc/freighter'
-import Boss from './npc/boss'
-import BackGround from './runtime/background'
-import GameInfo from './runtime/gameinfo'
-import Music from './runtime/music'
-import DataBus from './databus'
+import Player from '../player/index'
+import Enemy from '../npc/enemy'
+import Floatage from '../npc/floatage'
+import Freighter from '../npc/freighter'
+import Boss from '../npc/boss'
+import BackGround from '../runtime/background'
+import GameInfo from '../runtime/gameinfo'
+import Music from '../runtime/music'
+import DataBus from '../databus'
 //import Config from './common/config'
-import ControlLayer from './base/controllayer'
-import Util from './common/util'
-import Constants from './common/constants'
-import PageBus from './page/bus'
-import Store from './page/store'
-import Timer from './component/timer.js'
+import ControlLayer from '../base/controllayer'
+import Util from '../common/util'
+import Constants from '../common/constants'
+import PageBus from '../page/bus'
+import Store from '../page/store'
+
 let pagebus = new PageBus()
 let ctx = pagebus.ctx;
 let databus = new DataBus()
 let mystore
 //这是一个关于敌机有没有生成的标志,true=可以生成
-let boss_flag=true
+let boss_flag = true
 //这是一个关于敌机有没有死亡的标志,true=活着
 let boss_life = true
 
-const Config = require('./common/config.js').Config
-const systemInfo = wx.getSystemInfoSync();
+const Config = require('../common/config.js').Config
+
 
 // let button = wx.createUserInfoButton({ //创建用户授权按钮，注意：wx.authorize({scope: "scope.userInfo"})，无法弹出授权窗口
 //   type: 'text',
@@ -52,7 +52,7 @@ const systemInfo = wx.getSystemInfoSync();
  */
 export default class Main {
   constructor() {
-    
+
     try {
       mystore = new Store(wx.getStorageSync('userstore'))
     }
@@ -70,10 +70,10 @@ export default class Main {
     ['touchstart', 'touchmove', 'touchend'].forEach((type) => {
       canvas.addEventListener(type, this.touchHandler)
     })
-    ;['UpdateRate', 'CtrlLayers.Background.DefaultActive', 'GodMode']
-    .forEach(propName => {
-      Config.subscribe(propName, this.onConfigChanged.bind(this))
-    })
+      ;['UpdateRate', 'CtrlLayers.Background.DefaultActive', 'GodMode']
+        .forEach(propName => {
+          Config.subscribe(propName, this.onConfigChanged.bind(this))
+        })
 
     //3.初次/重新启动
     this.restart()
@@ -125,9 +125,9 @@ export default class Main {
     this.music.playBgm();
     this.ctrlLayerUI = new ControlLayer('UI', [this.gameinfo])
     this.ctrlLayerSprites = new ControlLayer('Sprites', [this.player])
-    this.ctrlLayerBackground = new ControlLayer('Background', [this.bg], 
-        Config.CtrlLayers.Background.DefaultActive)  //this.CtrlLayers.Background.DefaultActive)
-    
+    this.ctrlLayerBackground = new ControlLayer('Background', [this.bg],
+      Config.CtrlLayers.Background.DefaultActive)  //this.CtrlLayers.Background.DefaultActive)
+
     //2.两个主循环重启
     if (this.updateTimer)
       clearInterval(this.updateTimer)
@@ -143,8 +143,7 @@ export default class Main {
     )
   }
 
-  remove()
-  {
+  remove() {
     ['touchstart', 'touchmove', 'touchend'].forEach((type) => {
       canvas.removeEventListener(type, this.touchHandler)
     });
@@ -157,14 +156,14 @@ export default class Main {
   }
 
   pause() {
-    if (databus.gameStatus == DataBus.GameOver || databus.gameStatus == DataBus.GameWin ||databus.gameStatus==DataBus.BeforeGameOver)
+    if (databus.gameStatus == DataBus.GameOver || databus.gameStatus == DataBus.GameWin)
       return
     databus.gameStatus = DataBus.GamePaused
     this.ctrlLayerSprites.active = false//玩家飞机不再可移动
     this.ctrlLayerBackground.active = false//背景不再滚动
   }
   resume() {
-    if (databus.gameStatus == DataBus.GameOver || databus.gameStatus == DataBus.GameWin || databus.gameStatus==DataBus.BeforeGameOver)//确认游戏已经结束
+    if (databus.gameStatus == DataBus.GameOver || databus.gameStatus == DataBus.GameWin)//确认游戏已经结束
       return
     databus.gameStatus = DataBus.GameRunning
     this.ctrlLayerSprites.active = true
@@ -199,7 +198,7 @@ export default class Main {
   freighterGenerate() {
     if ((this.updateTimes * Constants.Freighter.SpawnRate) % Config.UpdateRate
       < Constants.Freighter.SpawnRate & databus.score <= Constants.Boss.score[pagebus.mission]) {
-      
+
       let freighter = databus.pool.getItemByClass('freighter', Freighter)
       freighter.init(Constants.Freighter.Speed)
       databus.enemys.push(freighter)  //freighter is an enemy
@@ -208,7 +207,7 @@ export default class Main {
 
   //boss生成逻辑
   bossGenerate() {
-    
+
     //if (((this.updateTimes * Constants.Boss.SpawnRate) % Config.UpdateRate
     //  < Constants.Boss.SpawnRate) /*& databus.score >= Constants.Boss.score[pagebus.mission]*/) {
     //  let boss = databus.pool.getItemByClass('boss', Boss)
@@ -229,9 +228,9 @@ export default class Main {
         let enemy = databus.enemys[i]
 
         if (enemy.isAlive() && enemy.isCollideWith(bullet)) {//循环检测碰撞
-          if(enemy.freighter) {
+          if (enemy.freighter) {
             enemy.hpReduce(Constants.Enemy.CollisionDamage)
-            if(enemy.hp == 0) enemy.destroy()
+            if (enemy.hp == 0) enemy.destroy()
           }
           else {
             enemy.destroy()
@@ -254,7 +253,7 @@ export default class Main {
           bullet.destroy()
           if (!boss.isAlive()) {
             boss.destroy()
-            boss_life=false
+            boss_life = false
             that.music.playExplosion()
             databus.score += 10
             break
@@ -263,13 +262,13 @@ export default class Main {
       }
     })
 
-    databus.floatages.forEach( floatage => {
-      if (floatage.lifetime()>6000) {
+    databus.floatages.forEach(floatage => {
+      if (floatage.lifetime() > 6000) {
         floatage.dispose()
       }
       if (this.player.isCollideWith(floatage)) {
         let effect = floatage.dispose()
-        if (effect==0) {
+        if (effect == 0) {
           if (Constants.Bullet.Types.indexOf(Config.Bullet.Type) < 4) {
             Config.Bullet.Type = Util.findNext(Constants.Bullet.Types, Config.Bullet.Type)
             Config.Bullet.Speed = Constants.Bullet.SpeedBase * (Constants.Bullet.Types.indexOf(Config.Bullet.Type) + 1)
@@ -284,9 +283,9 @@ export default class Main {
             })
           }
         }
-        else if (effect==1) {
-          if(this.player.hp==100) {
-            databus.score=databus.score+10
+        else if (effect == 1) {
+          if (this.player.hp == 100) {
+            databus.score = databus.score + 10
             wx.showToast({
               title: 'HP已满，积分增加'
             })
@@ -315,7 +314,7 @@ export default class Main {
       }
     })
 
-    if (!Config.GodMode){
+    if (!Config.GodMode) {
       for (let i = 0, il = databus.enemys.length; i < il; i++) {//游戏结束控制->待修改：敌机可以发射子弹
         let enemy = databus.enemys[i]
 
@@ -323,20 +322,18 @@ export default class Main {
           enemy.destroy();
 
           //与敌机碰撞时，由直接死亡变为生命值减少，同时暂时约定【子弹排数也减少1排】，后续可修改
-          this.player.hpReduce(Constants.Enemy.CollisionDamage)          
-          if(Constants.Bullet.Types.indexOf(Config.Bullet.Type)>0)Config.Bullet.Type = Util.findLast(Constants.Bullet.Types,Config.Bullet.Type)
+          this.player.hpReduce(Constants.Enemy.CollisionDamage)
+          if (Constants.Bullet.Types.indexOf(Config.Bullet.Type) > 0) Config.Bullet.Type = Util.findLast(Constants.Bullet.Types, Config.Bullet.Type)
 
           //Game Over逻辑由死亡变更为生命值==0
           //【注：此处的死亡判定暂时限定在碰撞敌机时，如果后面玩法扩充，需要再次补充死亡判定】
-          if(this.player.hp == 0){
-            databus.gameStatus=DataBus.BeforeGameOver;
-            if (mystore.mycards[0] <= 0) databus.gameStatus = DataBus.GameOver;//没有复活卡
-            // mystore.increaseMoney(databus.score * 10)
-            // mystore.increaseSummoney(databus.score * 10)
-            // mystore.increaseNum(1)
-            // mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
-            // wx.setStorageSync("userstore", mystore)
-            // databus.gameStatus = DataBus.GameOver
+          if (this.player.hp == 0) {
+            mystore.increaseMoney(databus.score * 10)
+            mystore.increaseSummoney(databus.score * 10)
+            mystore.increaseNum(1)
+            mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
+            wx.setStorageSync("userstore", mystore)
+            databus.gameStatus = DataBus.GameOver
             break
           }
         }
@@ -350,19 +347,17 @@ export default class Main {
           boss_life = false
 
           //与敌机碰撞时，由直接死亡变为生命值减少，同时暂时约定【子弹排数也减少1排】，后续可修改
-          this.player.hp=0;
+          this.player.hp = 0;
 
           //Game Over逻辑由死亡变更为生命值==0
           //【注：此处的死亡判定暂时限定在碰撞敌机时，如果后面玩法扩充，需要再次补充死亡判定】
           if (this.player.hp == 0) {
-            databus.gameStatus = DataBus.BeforeGameOver;
-            if (mystore.mycards[0] <= 0) databus.gameStatus = DataBus.GameOver;//没有复活卡
-            // mystore.increaseMoney(databus.score * 10)
-            // mystore.increaseSummoney(databus.score * 10)
-            // mystore.increaseNum(1)
-            // mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
-            // wx.setStorageSync("userstore", mystore)
-            // databus.gameStatus = DataBus.GameOver
+            mystore.increaseMoney(databus.score * 10)
+            mystore.increaseSummoney(databus.score * 10)
+            mystore.increaseNum(1)
+            mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
+            wx.setStorageSync("userstore", mystore)
+            databus.gameStatus = DataBus.GameOver
             break
           }
         }
@@ -372,7 +367,7 @@ export default class Main {
   }
 
   //-- 游戏【操控】事件处理 ----
-  touchEventHandler(e){
+  touchEventHandler(e) {
     e.preventDefault()
     let [x, y] = (e.type == 'touchstart' || e.type == 'touchmove') ?
       [e.touches[0].clientX, e.touches[0].clientY] : [null, null]
@@ -402,30 +397,17 @@ export default class Main {
               this.remove();
               this.music.stopBgm();
               this.music.updateBgm();
-              pagebus.page=0;
+              pagebus.page = 0;
               break
             case 'returnmission':
               this.music.stopBgm();
               this.music.updateBgm();
               this.remove();
-              pagebus.page = 4;
+              pagebus.page = 7;
               break
-            case 'relive': //复活
-              console.log('!!!!!')
+            case 'tool0':
               this.usetool(0);
-              console.log('复活吧')
               break;
-            case 'giveup': //不复活
-              mystore.increaseMoney(databus.score * 10)
-              mystore.increaseSummoney(databus.score * 10)
-              mystore.increaseNum(1)
-              mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
-              wx.setStorageSync("userstore", mystore)
-              databus.gameStatus = DataBus.GameOver
-              break;
-            // case 'tool0':
-            //   this.usetool(0);
-            //   break;
             case 'tool1':
               this.usetool(1);
               break;
@@ -442,14 +424,12 @@ export default class Main {
               this.usetool(5);
               break;
             case 'nextmission':
-            //下一关
-              if (pagebus.mission<11){
-                this.remove();
-                pagebus.mission = pagebus.mission + 1;
-                pagebus.page = 1;
-                this.music.playBgm();
-                this.music.updateBgm();
-              }
+              //下一关
+              this.remove();
+              pagebus.mission = pagebus.mission + 1;
+              pagebus.page = 1;
+              this.music.playBgm();
+              this.music.updateBgm();
               break
             case 'share':
               wx.shareAppMessage({
@@ -483,7 +463,7 @@ export default class Main {
               Config.CtrlLayers.Background.DefaultActive = Util.findNext(res.optionList, Config.CtrlLayers.Background.DefaultActive)
               break
           }
-          if (res.message.length > 0){
+          if (res.message.length > 0) {
             upperLayerHandled = true
             return true //if any element handled the event, stop iteration
           }
@@ -494,49 +474,27 @@ export default class Main {
   }
   usetool(idx)//使用几号道具 0 复活卡，1无敌卡，2轰炸卡，3加速卡，4补充卡，5无限卡
   {
-    console.log(databus.gameStatus)
-    if (databus.gameStatus!=DataBus.GameRunning&&!(idx==0&&databus.gameStatus==DataBus.BeforeGameOver))return ;
     if (mystore.mycards[idx] > 0) mystore.mycards[idx]--;
     else return;
     switch (idx) {
-      case 0: {//复活
-        databus.gameStatus=DataBus.GameRunning;//重新运作
-        this.resume()
-        this.player.hp=100;//满血
-        this.player.setAirPosAcrossFingerPosZ(systemInfo.windowWidth/2, systemInfo.windowHeight-20)
-        console.log('复活')
-        //mystore.mycards[idx]++;
+      case 0: {
         break;
       }
       case 1: {
-        if(this.player.hpinf==true)
-        {
-          mystore.mycards[idx]++;
-          return ;
-        }
         this.player.hpinf = true;
-        this.tool1=null;//清空
-        
-        this.tool1 = new Timer(5, "无敌时间" ,true, systemInfo.windowWidth/2-100,systemInfo.windowHeight-50,200,10,'red');
         break;
       }
       case 2: {
-
         break;
       }
       case 3: {
         break;
       }
       case 4: {
-        this.player.mpAdd(40);//增加40
         break;
       }
       case 5: {
-        if (this.player.mpinf == true) {
-          mystore.mycards[idx]++;
-          return;
-        }
-        this.player.mpinf=true;
+        this.player.mpinf = true;
         break;
       }
     }
@@ -544,7 +502,7 @@ export default class Main {
   }
   //-- 游戏数据【更新】主函数 ----
   update(timeElapsed) {
-    if ([DataBus.GameOver, DataBus.GamePaused, DataBus.GameWin, DataBus.BeforeGameOver].indexOf(databus.gameStatus) > -1)
+    if ([DataBus.GameOver, DataBus.GamePaused, DataBus.GameWin].indexOf(databus.gameStatus) > -1)
       return
 
     this.bg.update()
@@ -557,20 +515,20 @@ export default class Main {
         item.update(timeElapsed)
       })
 
-    this.enemyGenerate()
+    //this.enemyGenerate()
 
     //this.floatageGenerate()  //Freighters spawn floatages in turn
-    this.freighterGenerate()
+    //this.freighterGenerate()
 
     this.collisionDetection()
 
     //即使GameOver仍可能发最后一颗子弹..仇恨的子弹..
     if ((this.updateTimes * Constants.Bullet.SpawnRate) % Config.UpdateRate
-       < Constants.Bullet.SpawnRate) {
+      < Constants.Bullet.SpawnRate) {
       this.player.shoot()
       this.music.playShoot()
     }
-    
+
     // if (databus.score == 5) {//测试程序*************************************************************
     //   databus.gameStatus = DataBus.GameWin;
     //   //游戏获胜，解锁下一关卡。
@@ -579,20 +537,14 @@ export default class Main {
     //   // if(pagebus.mission+1<12)mystore.mylevel[pagebus.world][pagebus.mission+1]=true;
     //   // wx.setStorageSync("userstore", mystore)
     // }//**************************************************************************************** */
-    if (databus.score >= Constants.Boss.score[pagebus.mission]) {
-      if (boss_flag){
-        this.bossGenerate()
-        boss_flag=false
-      }
+    if (boss_flag) {
+      this.bossGenerate()
+      boss_flag = false
     }
-    if(!boss_life){
-      mystore.unlockedLevel(pagebus.world, pagebus.mission)
-      mystore.increaseMoney(databus.score * 10)
-      mystore.increaseSummoney(databus.score * 10)
-      mystore.increaseNum(1)
-      mystore.increaseOutput(databus.score)    //score就是击落敌机的数量
-      wx.setStorageSync("userstore", mystore)
-      databus.gameStatus = DataBus.GameWin
+
+    if (!boss_life) {
+      boss_flag = true
+      boss_life = true
     }
     //游戏胜利不生成任何新敌机
     if (databus.gameStatus == DataBus.GameWin) {
@@ -606,17 +558,13 @@ export default class Main {
       this.ctrlLayerSprites.active = false
       this.ctrlLayerBackground.active = false
     }
-    //待选择时不再生成敌机
-    if(databus.gameStatus==DataBus.BeforeGameOver){
-      this.ctrlLayerSprites.active = false
-      this.ctrlLayerBackground.active = false
-    }
+
 
   }
 
-  onConfigChanged(key, value, oldValue){
+  onConfigChanged(key, value, oldValue) {
     console.log(`Main::onConfigChanged: ${key}=${value}`)
-    switch (key){
+    switch (key) {
       case 'UpdateRate':
         this.updateInterval = 1000 / Config.UpdateRate
         if (this.updateTimer)
@@ -660,26 +608,17 @@ export default class Main {
     // })
 
     this.gameinfo.renderGameScore(ctx, databus.score)
-    
-    this.gameinfo.renderPlayerStatus(ctx,this.player.hp,this.player.mp,this.player.hpinf,this.player.mpinf)
+
+    this.gameinfo.renderPlayerStatus(ctx, this.player.hp, this.player.mp, this.player.hpinf, this.player.mpinf)
     this.gameinfo.renderPause(ctx);//暂停游戏
     this.gameinfo.renderTools(ctx);//工具箱
-    //工具计时器
-    if(this.tool1&&this.tool1.islive==true)this.tool1.render(ctx);
-    else this.player.hpinf=false;
-    //选择使用复活卡
-    if(databus.gameStatus == DataBus.BeforeGameOver)
-    {
-      this.gameinfo.renderRelive(ctx,mystore.mycards[0])
-    }
     // 游戏结束停止帧循环
     if (databus.gameStatus == DataBus.GameOver) {
       this.gameinfo.renderGameOver(ctx, databus.score)
     }
 
     //游戏获胜也停止循环
-    else if(databus.gameStatus == DataBus.GameWin)
-    {
+    else if (databus.gameStatus == DataBus.GameWin) {
       this.gameinfo.renderGameWin(ctx, databus.score)
     }
 
@@ -696,7 +635,7 @@ export default class Main {
 
   //-- 游戏数据【渲染】主循环 ----
   loopRender() {
-    
+
     this.render();
     this.renderLoopId = window.requestAnimationFrame(
       this.bindloopRender,

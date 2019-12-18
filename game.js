@@ -11,13 +11,15 @@ import Store from './js/page/store'
 import Shop from './js/page/shop'
 import EntertainmentChoose from './js/page/entertainmentchoose'
 import Harvest from './js/entertainment/harvest'
+import HitBoss from './js/entertainment/hitboss'
 import HelpUI from './js/page/helpui'
+import Timer from './js/component/timer.js'
 //import achieve_Store from './js/page/achieve_store'
 
 /*
   新增界面: import XXX from './js/page/xxx'
 */
-
+//new Timer(1);
 let pagebus = new PageBus();
 let mystore
 //let achstore = new achieve_Store()
@@ -96,6 +98,12 @@ Object.defineProperty(pagebus, "page", {
           new HelpUI();
           break;
       }
+      case 10: //boss模式
+        {
+          pagebus.ctx.textAlign = "left"
+          new HitBoss();
+          break;
+        }
       /**
        * 新增界面，例如:
        * case 2:

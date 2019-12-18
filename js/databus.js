@@ -94,3 +94,4 @@ DataBus.GameRunning = 0
 DataBus.GameOver = 1
 DataBus.GamePaused = 2
 DataBus.GameWin = 3
+DataBus.BeforeGameOver=4//hp降为0，选择使用复活卡
