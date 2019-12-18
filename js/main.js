@@ -426,11 +426,13 @@ export default class Main {
               break;
             case 'nextmission':
             //下一关
-              this.remove();
-              pagebus.mission = pagebus.mission+1;
-              pagebus.page = 1;
-              this.music.playBgm();
-              this.music.updateBgm();
+              if (pagebus.mission<11){
+                this.remove();
+                pagebus.mission = pagebus.mission + 1;
+                pagebus.page = 1;
+                this.music.playBgm();
+                this.music.updateBgm();
+              }
               break
             case 'share':
               wx.shareAppMessage({
