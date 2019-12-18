@@ -34,20 +34,32 @@ export default class Template {
     this.lastshootdata = this.storepoint.howMuchLastshoot()
 
     this.bg = new Image();
-    this.bg.src = 'images/bg.jpg';
+    this.bg.src = 'images/achbg.jpg';
     this.boxbg = new Image();
-    this.boxbg.src = "images/boxbg.png";
-    this.word1 = new Button('孜孜不倦', 'images/bg.jpg', Width / 2 - 100, 160, 60, 60);
+    //this.boxbg.src = "images/boxbg.png";
+    this.word1 = new Button('孜孜不倦', 'images/bg.jpg', Width / 2 - 80, 100, 60, 60);
     //玩游戏次数达到n次    //四个数字分别表示左边开始的位置，上面开始的位置，左右大小，上下大小
-    this.word2 = new Button('通关达人', 'images/bg.jpg', Width / 2 - 30, 160, 60, 60);
-    //通了多少多少关
-    this.word3 = new Button('输出机器', 'images/bg.jpg', Width / 2 - 100, 250, 60, 60);
-    //击落了n架飞机
-    this.word4 = new Button('富可敌国', 'images/bg.jpg', Width / 2 - 30, 250, 60, 60);
+    this.word2 = new Button('', 'images/ach3.jpg', Width / 2 - 150, 100, 60, 60);
+    //玩游戏次数达到n次 
+    this.word3 = new Button('孜孜不倦', 'images/bg.jpg', Width / 2 - 10, 100, 60, 60);
+    //玩游戏次数达到n次 
+    this.word10 = new Button('孜孜不倦', 'images/bg.jpg', Width / 2 + 60, 100, 60, 60);
+    //玩游戏次数达到n次 
+    this.word4 = new Button('输出机器', 'images/bg.jpg', Width / 2 - 80, 180, 60, 60);
+    //击落很多飞机
+    this.word5 = new Button('输出机器', 'images/bg.jpg', Width / 2 -10, 180, 60, 60);
+    //击落很多飞机
+    this.word6 = new Button('', 'images/ach2.jpg', Width / 2 - 150, 180, 60, 60);
+    //击落很多飞机
+    this.word11 = new Button('输出机器', 'images/bg.jpg', Width / 2 + 60, 180, 60, 60);
+    //击落很多飞机
+    this.word7 = new Button('富可敌国', 'images/bg.jpg', Width / 2 - 80, 250, 60, 60);
     //拥有很多很多金钱
-    this.word5 = new Button('全身而退', 'images/bg.jpg', Width / 2 + 40, 160, 60, 60);
+    this.word8 = new Button('富可敌国', 'images/bg.jpg', Width / 2 -10, 250, 60, 60);
     //拥有很多很多金钱
-    this.word6 = new Button('绝处逢生', 'images/bg.jpg', Width / 2 + 40, 250, 60, 60);
+    this.word9 = new Button('', 'images/ach1.jpg', Width / 2 - 150, 250, 60, 60);
+    //拥有很多很多金钱
+    this.word12 = new Button('富可敌国', 'images/bg.jpg', Width / 2 + 60, 250, 60, 60);
     //拥有很多很多金钱
     this.returnbtn = new Button('返回主页', 'images/btn.png', (Width - 100) / 2, 480, 100, 50);
     this.text1 = new Button('点击上面的成就名字，', '', Width / 2 - 110, 340, 200, 50);
@@ -95,7 +107,7 @@ export default class Template {
     ctx.drawImage(this.bg, 0, 0, systemInfo.windowWidth, systemInfo.windowHeight);
     ctx.drawImage(this.boxbg, (Width - 400) / 2, 50, 400, 500);
     ctx.font = '30px Arial';
-    ctx.fillText('成就', Width / 2, 120)
+    ctx.fillText('成就', Width / 2, 70)
     ctx.font = '16px Arial';
     this.word1.render(ctx);
     this.word2.render(ctx);
@@ -103,6 +115,12 @@ export default class Template {
     this.word4.render(ctx);
     this.word5.render(ctx);
     this.word6.render(ctx);
+    this.word7.render(ctx);
+    this.word8.render(ctx);
+    this.word9.render(ctx);
+    this.word10.render(ctx);
+    this.word11.render(ctx);
+    this.word12.render(ctx);
     this.returnbtn.render(ctx);
     this.text1.render(ctx);
     this.text2.render(ctx);
@@ -146,6 +164,24 @@ export default class Template {
     else if (this.word6.isTapped(x, y) == true) {
       this.showIntroduction(6);
     }
+    else if (this.word7.isTapped(x, y) == true) {
+      this.showIntroduction(7);
+    }
+    else if (this.word8.isTapped(x, y) == true) {
+      this.showIntroduction(8);
+    }
+    else if (this.word9.isTapped(x, y) == true) {
+      this.showIntroduction(9);
+    }
+    else if (this.word10.isTapped(x, y) == true) {
+      this.showIntroduction(10);
+    }
+    else if (this.word11.isTapped(x, y) == true) {
+      this.showIntroduction(11);
+    }
+    else if (this.word12.isTapped(x, y) == true) {
+      this.showIntroduction(12);
+    }
   }
 
 
@@ -166,10 +202,10 @@ export default class Template {
     switch (x) {
       case 1: {
         this.text1 = new Button('孜孜不倦：', '', Width / 2 - 110, 340, 200, 30);
-        this.text2 = new Button('累积玩游戏100次', '', Width / 2 - 110, 370, 220, 30);
+        this.text2 = new Button('累积玩游戏5次', '', Width / 2 - 110, 370, 220, 30);
         this.text3 = new Button('实际完成：',  '', Width / 2 - 70, 400, 100, 30);
         this.text4 = new Button(this.numdata, '', Width / 2-20, 400, 100, 30);
-        if(this.numdata >= 100){
+        if(this.numdata >= 5){
           this.text5 = new Button('已完成该成就', '', Width / 2 - 110, 430, 200, 30);
         }
         else{
@@ -178,11 +214,19 @@ export default class Template {
         break;
       }
       case 2: {
-        this.text1 = new Button('通关达人：', '', Width / 2 - 110, 340, 200, 30);
-        this.text2 = new Button('累积通过10关', '', Width / 2 - 110, 370, 220, 30);
+        this.text1 = new Button('孜孜不倦：', '', Width / 2 - 110, 340, 200, 30);
+        this.text2 = new Button('累积玩一定次数的游戏', '', Width / 2 - 110, 370, 220, 30);
         this.text3 = new Button('实际完成：', '', Width / 2 - 70, 400, 100, 30);
-        this.text4 = new Button(this.leveldata, '', Width / 2 - 20, 400, 100, 30);
-        if (this.leveldata >= 10) {
+        this.text4 = new Button(this.numdata, '', Width / 2 - 20, 400, 100, 30);
+        this.text5 = new Button('', '', Width / 2 - 110, 430, 200, 30);
+        break;
+      }
+      case 3: {
+        this.text1 = new Button('孜孜不倦：', '', Width / 2 - 110, 340, 200, 30);
+        this.text2 = new Button('累积玩游戏20次', '', Width / 2 - 110, 370, 220, 30);
+        this.text3 = new Button('实际完成：', '', Width / 2 - 70, 400, 100, 30);
+        this.text4 = new Button(this.numdata, '', Width / 2 - 20, 400, 100, 30);
+        if (this.numdata >= 20) {
           this.text5 = new Button('已完成该成就', '', Width / 2 - 110, 430, 200, 30);
         }
         else {
@@ -190,12 +234,12 @@ export default class Template {
         }
         break;
       }
-      case 3: {
-        this.text1 = new Button('输出机器：', '', Width / 2 - 110, 340, 200, 30);
-        this.text2 = new Button('累积击落200架敌机', '', Width / 2 - 110, 370, 220, 30);
+      case 10: {
+        this.text1 = new Button('孜孜不倦：', '', Width / 2 - 110, 340, 200, 30);
+        this.text2 = new Button('累积玩游戏100次', '', Width / 2 - 110, 370, 220, 30);
         this.text3 = new Button('实际完成：', '', Width / 2 - 70, 400, 100, 30);
-        this.text4 = new Button(this.outputdata, '', Width / 2 - 20, 400, 100, 30);
-        if (this.outputdata >= 200) {
+        this.text4 = new Button(this.numdata, '', Width / 2 - 20, 400, 100, 30);
+        if (this.numdata >= 100) {
           this.text5 = new Button('已完成该成就', '', Width / 2 - 110, 430, 200, 30);
         }
         else {
@@ -204,6 +248,57 @@ export default class Template {
         break;
       }
       case 4: {
+        this.text1 = new Button('输出机器：', '', Width / 2 - 110, 340, 200, 30);
+        this.text2 = new Button('累积击落20架敌机', '', Width / 2 - 110, 370, 220, 30);
+        this.text3 = new Button('实际完成：', '', Width / 2 - 70, 400, 100, 30);
+        this.text4 = new Button(this.outputdata, '', Width / 2 - 20, 400, 100, 30);
+        if (this.outputdata >= 20) {
+          this.text5 = new Button('已完成该成就', '', Width / 2 - 110, 430, 200, 30);
+        }
+        else {
+          this.text5 = new Button('未完成该成就', '', Width / 2 - 110, 430, 200, 30);
+        }
+        break;
+      }
+     
+      case 5: {
+        this.text1 = new Button('输出机器：', '', Width / 2 - 110, 340, 200, 30);
+        this.text2 = new Button('累积击落100架敌机', '', Width / 2 - 110, 370, 220, 30);
+        this.text3 = new Button('实际完成：', '', Width / 2 - 70, 400, 100, 30);
+        this.text4 = new Button(this.outputdata, '', Width / 2 - 20, 400, 100, 30);
+        if (this.outputdata >= 100) {
+          this.text5 = new Button('已完成该成就', '', Width / 2 - 110, 430, 200, 30);
+        }
+        else {
+          this.text5 = new Button('未完成该成就', '', Width / 2 - 110, 430, 200, 30);
+        }
+        break;
+      }
+
+      case 6: {
+        this.text1 = new Button('输出机器：', '', Width / 2 - 110, 340, 200, 30);
+        this.text2 = new Button('累积击落一定数量的敌机', '', Width / 2 - 110, 370, 220, 30);
+        this.text3 = new Button('实际完成：', '', Width / 2 - 70, 400, 100, 30);
+        this.text4 = new Button(this.outputdata, '', Width / 2 - 20, 400, 100, 30);
+        this.text5 = new Button('', '', Width / 2 - 110, 430, 200, 30);
+        break;
+      }
+      
+      case 11: {
+        this.text1 = new Button('输出机器：', '', Width / 2 - 110, 340, 200, 30);
+        this.text2 = new Button('累积击落500架敌机', '', Width / 2 - 110, 370, 220, 30);
+        this.text3 = new Button('实际完成：', '', Width / 2 - 70, 400, 100, 30);
+        this.text4 = new Button(this.outputdata, '', Width / 2 - 20, 400, 100, 30);
+        if (this.outputdata >= 500) {
+          this.text5 = new Button('已完成该成就', '', Width / 2 - 110, 430, 200, 30);
+        }
+        else {
+          this.text5 = new Button('未完成该成就', '', Width / 2 - 110, 430, 200, 30);
+        }
+        break;
+      }
+
+      case 7: {
         this.text1 = new Button('富可敌国：', '', Width / 2 - 110, 340, 200, 30);
         this.text2 = new Button('累积获得2000金币', '', Width / 2 - 110, 370, 220, 30);
         this.text3 = new Button('实际完成：', '', Width / 2 - 70, 400, 100, 30);
@@ -216,13 +311,13 @@ export default class Template {
         }
         break;
       }
-     
-      case 5: {
-        this.text1 = new Button('全身而退：', '', Width / 2 - 110, 340, 200, 30);
-        this.text2 = new Button('累积击落100架敌机而未掉血', '', Width / 2 - 110, 370, 220, 30);
+
+      case 8: {
+        this.text1 = new Button('富可敌国：', '', Width / 2 - 110, 340, 200, 30);
+        this.text2 = new Button('累积获得10000金币', '', Width / 2 - 110, 370, 220, 30);
         this.text3 = new Button('实际完成：', '', Width / 2 - 70, 400, 100, 30);
-        this.text4 = new Button(this.shootdata, '', Width / 2 - 20, 400, 100, 30);
-        if (this.shootdata >= 100) {
+        this.text4 = new Button(this.moneydata, '', Width / 2 - 20, 400, 100, 30);
+        if (this.moneydata >= 10000) {
           this.text5 = new Button('已完成该成就', '', Width / 2 - 110, 430, 200, 30);
         }
         else {
@@ -231,12 +326,21 @@ export default class Template {
         break;
       }
 
-      case 6: {
-        this.text1 = new Button('绝处逢生：', '', Width / 2 - 110, 340, 200, 30);
-        this.text2 = new Button('在只剩25点血的情况下击落100架敌机', '', Width / 2 - 110, 370, 220, 30);
+      case 9: {
+        this.text1 = new Button('富可敌国：', '', Width / 2 - 110, 340, 200, 30);
+        this.text2 = new Button('累积获得一定数量的金币', '', Width / 2 - 110, 370, 220, 30);
         this.text3 = new Button('实际完成：', '', Width / 2 - 70, 400, 100, 30);
-        this.text4 = new Button(this.lastshootdata, '', Width / 2 - 20, 400, 100, 30);
-        if (this.lastshootdata >= 100) {
+        this.text4 = new Button(this.moneydata, '', Width / 2 - 20, 400, 100, 30);
+        this.text5 = new Button('', '', Width / 2 - 110, 430, 200, 30);
+        break;
+      }
+
+      case 12: {
+        this.text1 = new Button('富可敌国：', '', Width / 2 - 110, 340, 200, 30);
+        this.text2 = new Button('累积获得20000金币', '', Width / 2 - 110, 370, 220, 30);
+        this.text3 = new Button('实际完成：', '', Width / 2 - 70, 400, 100, 30);
+        this.text4 = new Button(this.moneydata, '', Width / 2 - 20, 400, 100, 30);
+        if (this.moneydata >= 20000) {
           this.text5 = new Button('已完成该成就', '', Width / 2 - 110, 430, 200, 30);
         }
         else {
