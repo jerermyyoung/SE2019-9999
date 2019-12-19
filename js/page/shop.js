@@ -266,12 +266,12 @@ export default class Template {
       this.intro = new Button("您的金币不足", 'images/white.png', canvas.width * 0.1, canvas.height * 0.82, canvas.width * 0.8, canvas.height * 0.08)
     }
     else if (x > 5 && this.storepoint.haveThePlane(x - 6)) {
-      // this.intro = new Button("您已拥有此飞机", 'images/white.png', canvas.width * 0.1, canvas.height * 0.82, canvas.width * 0.8, canvas.height * 0.08)
-      this.intro = new Button("正在使用此飞机", 'images/white.png', canvas.width * 0.1, canvas.height * 0.82, canvas.width * 0.8, canvas.height * 0.08)
-      this.storepoint.plane=x-6;
-      console.log(this.storepoint.plane);
-      pagebus.plane=x-6;
-      this.resetGoods()
+      this.intro = new Button("您已拥有此飞机", 'images/white.png', canvas.width * 0.1, canvas.height * 0.82, canvas.width * 0.8, canvas.height * 0.08)
+      //this.intro = new Button("正在使用此飞机", 'images/white.png', canvas.width * 0.1, canvas.height * 0.82, canvas.width * 0.8, canvas.height * 0.08)
+      //this.storepoint.plane=x-6;
+      //console.log(this.storepoint.plane);
+      //pagebus.plane=x-6;
+      //this.resetGoods()
     }
     else {
       this.moneydata -= this.goodsvaldata[x]
