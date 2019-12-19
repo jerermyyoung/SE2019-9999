@@ -587,7 +587,7 @@ export default class Main {
       let enemy = databus.enemys[i]
       if (enemy.isAlive()) {      
         enemy.destroy()       
-        that.music.playExplosion()
+        this.music.playExplosion()
         databus.score += 1
       }
     }
@@ -599,7 +599,7 @@ export default class Main {
         if (!boss.isAlive()) {
           boss.destroy()
           boss_life = false
-          that.music.playExplosion()
+          this.music.playExplosion()
           databus.score += 10
         }
       }
