@@ -133,22 +133,33 @@ export default class GameInfo {
           this.ispaused = !this.ispaused;
           callback({ message: 'resume' })
         }
-        else for(var i=1;i<6;i++)
-        {
-          if (Util.inArea({ x, y }, {
+        else {
+          for(var i=1;i<6;i++){
+            if (Util.inArea({ x, y }, {
             startX: 5,
             startY: screenHeight / 2 - 140 + i * 45,
             endX: 45, 
             endY: screenHeight / 2 - 140 + i * 45+40
-          }))
-          {
+            }))
+            {
             //使用第i号道具
             callback({ message: 'tool'+i })
             
             break;
+            }
+          }
+          if(Util.inArea({x,y},{
+            startX: screenWidth - 60,
+            startY: screenHeight - 250,
+            endX: screenWidth,
+            endY: screenHeight - 190
+          }))
+          {
+            //使用大招
+            callback({ message: 'ultraSkill' })
           }
         }
-        break
+      break
     }
   }
   
@@ -333,6 +344,20 @@ export default class GameInfo {
       startY: 10,
       endX: 10 + 28, //ctx.font = '20px Arial'
       endY: 10 + 25
+    }
+  }
+
+  renderUltraSkillIcon(ctx,currentMP,mpinf){
+    var x1=new Image();
+    x1.src='images/btnUltra.png';
+    var x2=new Image();
+    x2.src='images/btnUltraNot.png';
+
+    if(currentMP==100 || mpinf==true){
+      ctx.drawImage(x1,screenWidth-60,screenHeight-250,60,60);
+    }
+    else{
+      ctx.drawImage(x2,screenWidth-60,screenHeight-250,60,60);
     }
   }
 

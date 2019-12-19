@@ -223,37 +223,7 @@ export default class Main {
   // 全局碰撞检测
   collisionDetection() {
     let that = this
-    if(this.player.bomb==true)//轰炸
-    {
-      for (let i = 0, il = databus.enemys.length; i < il; i++) {
-        let enemy = databus.enemys[i]
-        if (enemy.isAlive())
-        {
-          if (enemy.freighter) {
-            enemy.hpReduce(Constants.Enemy.CollisionDamage)
-            if (enemy.hp == 0) enemy.destroy()
-          }
-          else {
-            enemy.destroy()
-          }
-          that.music.playExplosion()
-          databus.score += 1
-        }
-      }
 
-      for (let i = 0, il = databus.bosses.length; i < il; i++) {
-        let boss = databus.bosses[i]
-        if (boss.isAlive() ) {
-          boss.hpReduce(1)
-          if (!boss.isAlive()) {
-            boss.destroy()
-            boss_life = false
-            that.music.playExplosion()
-            databus.score += 10
-          }
-        }
-      }
-    }
     databus.bullets.forEach((bullet) => {
       for (let i = 0, il = databus.enemys.length; i < il; i++) {
         let enemy = databus.enemys[i]
@@ -471,6 +441,9 @@ export default class Main {
             case 'tool5':
               this.usetool(5);
               break;
+            case 'ultraSkill':
+              this.useUltraSkill();
+              break;
             case 'nextmission':
             //下一关
               if (pagebus.mission<11){
@@ -545,8 +518,7 @@ export default class Main {
           return ;
         }
         this.player.hpinf = true;
-        this.tool1=null;//无敌计时器清空
-        
+        this.tool1=null;//清空
         this.tool1 = new Timer(5, "无敌时间", true, systemInfo.windowWidth / 2 - 100, systemInfo.windowHeight - 50, 200, 10,'#E6A23C');
         break;
       }
@@ -579,6 +551,27 @@ export default class Main {
     }
     wx.setStorageSync("userstore", mystore)
   }
+
+  useUltraSkill(){
+    if(this.player.mpinf==false) this.player.mp-=100;
+    for (let i = 0, il = databus.enemys.length; i < il; i++){
+      let enemy=databus.enemys[i]
+      enemy.destroy()
+    }
+
+    for (let i = 0, il = databus.bosses.length; i < il; i++){
+      let boss=databus.bosses[i]
+      boss.hpReduce(3)
+      if (!boss.isAlive()) {
+        boss.destroy()
+        boss_life=false
+        that.music.playExplosion()
+        databus.score += 10
+        break
+      }
+    }    
+  }
+
   //-- 游戏数据【更新】主函数 ----
   update(timeElapsed) {
     if ([DataBus.GameOver, DataBus.GamePaused, DataBus.GameWin, DataBus.BeforeGameOver].indexOf(databus.gameStatus) > -1)
@@ -710,11 +703,10 @@ export default class Main {
     this.gameinfo.renderPlayerStatus(ctx,this.player.hp,this.player.mp,this.player.hpinf,this.player.mpinf)
     this.gameinfo.renderPause(ctx);//暂停游戏
     this.gameinfo.renderTools(ctx);//工具箱
+    this.gameinfo.renderUltraSkillIcon(ctx,this.player.mp,this.player.mpinf);//大招图标
     //工具计时器
     if(this.tool1&&this.tool1.islive==true)this.tool1.render(ctx);
     else this.player.hpinf=false;
-    if (this.tool2 && this.tool2.islive == true) this.tool2.render(ctx);
-    else this.player.bomb = false;
     //选择使用复活卡
     if(databus.gameStatus == DataBus.BeforeGameOver)
     {
