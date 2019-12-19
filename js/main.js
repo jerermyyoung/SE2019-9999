@@ -223,7 +223,36 @@ export default class Main {
   // 全局碰撞检测
   collisionDetection() {
     let that = this
+    if (this.player.bomb == true)//轰炸
+    {
+      for (let i = 0, il = databus.enemys.length; i < il; i++) {
+        let enemy = databus.enemys[i]
+        if (enemy.isAlive()) {
+          if (enemy.freighter) {
+            enemy.hpReduce(Constants.Enemy.CollisionDamage)
+            if (enemy.hp == 0) enemy.destroy()
+          }
+          else {
+            enemy.destroy()
+          }
+          that.music.playExplosion()
+          databus.score += 1
+        }
+      }
 
+      for (let i = 0, il = databus.bosses.length; i < il; i++) {
+        let boss = databus.bosses[i]
+        if (boss.isAlive()) {
+          boss.hpReduce(1)
+          if (!boss.isAlive()) {
+            boss.destroy()
+            boss_life = false
+            that.music.playExplosion()
+            databus.score += 10
+          }
+        }
+      }
+    }
     databus.bullets.forEach((bullet) => {
       for (let i = 0, il = databus.enemys.length; i < il; i++) {
         let enemy = databus.enemys[i]
@@ -707,6 +736,8 @@ export default class Main {
     //工具计时器
     if(this.tool1&&this.tool1.islive==true)this.tool1.render(ctx);
     else this.player.hpinf=false;
+    if (this.tool2 && this.tool2.islive == true) this.tool2.render(ctx);
+    else this.player.bomb = false;
     //选择使用复活卡
     if(databus.gameStatus == DataBus.BeforeGameOver)
     {
