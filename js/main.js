@@ -54,7 +54,10 @@ export default class Main {
   constructor() {
     
     try {
-      mystore = new Store(wx.getStorageSync('userstore'))
+      var mydata = wx.getStorageSync('userstore')
+      mystore = new Store(mydata)
+      console.log(mydata);
+      pagebus.plane=mystore.plane;
     }
     catch (e) {
       console.log(e)
@@ -562,7 +565,10 @@ export default class Main {
         this.music.playhongzha();
         break;
       }
-      case 3: {
+      case 3: { //冻结卡
+        databus.frozen=true;
+        this.tool3 = null;//冻结计时器清空
+        this.tool3 = new Timer(3, "冻结时间", true, systemInfo.windowWidth / 2 - 100, systemInfo.windowHeight - 150, 200, 10, '#409EFF');
         break;
       }
       case 4: {
@@ -743,6 +749,8 @@ export default class Main {
     else this.player.hpinf=false;
     if (this.tool2 && this.tool2.islive == true) this.tool2.render(ctx);
     else this.player.bomb = false;
+    if (this.tool3 && this.tool3.islive == true) this.tool3.render(ctx);
+    else databus.frozen = false;
     //选择使用复活卡
     if(databus.gameStatus == DataBus.BeforeGameOver)
     {

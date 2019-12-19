@@ -10,5 +10,6 @@ export default class DataBus {
     this.world = 0;//默认世界
     this.entertainmentMode = 1;//默认娱乐模式
     this.mission = 0;//关卡
+    this.plane=-1;//默认小飞机
   }
 }

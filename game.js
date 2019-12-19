@@ -37,6 +37,7 @@ Object.defineProperty(pagebus, "page", {
       {
           try {
             mystore = new Store(wx.getStorageSync('userstore'))
+            console.log(mystore);
           }
           catch (e) {
             console.log(e)

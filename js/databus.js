@@ -18,6 +18,7 @@ export default class DataBus {
   }
 
   reset() {
+    this.frozen = false;
     this.frame      = 0
     this.score      = 0
     this.bullets    = []

@@ -60,14 +60,14 @@ export default class Enemy extends Sprite {
 
   update(timeElapsed) {
     if (this.isAlive()) {
-      this.y += this[__.speed]
+      if(!databus.frozen)this.y += this[__.speed]
       if (this.y > window.innerHeight + this.height){
         databus.removeEnemey(this)  //对象回收
         //console.log('Enemy life: ' + (new Date().getTime() - this.birth))
       }
     }
     else {  //destroyed
-      this.y += this[__.speed]  //即便炸毁了还有惯性
+      if(!databus.frozen)this.y += this[__.speed]  //即便炸毁了还有惯性
       this[__.explosionAnim].update(timeElapsed)
     }
   }

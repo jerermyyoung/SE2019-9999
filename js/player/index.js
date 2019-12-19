@@ -2,12 +2,13 @@ import Sprite   from '../base/sprite'
 import Bullet   from './bullet'
 import DataBus  from '../databus'
 import Constants from '../common/constants'
-
+import Pagebus from '../page/bus.js'
+let pagebus=new Pagebus();
 const screenWidth    = window.innerWidth
 const screenHeight   = window.innerHeight
 
 // 玩家相关常量设置
-const PLAYER_IMG_SRC = 'images/hero.png'
+
 const PLAYER_WIDTH   = 80
 const PLAYER_HEIGHT  = 80
 
@@ -16,10 +17,13 @@ const PLAYER_MAXMP = 100
 
 let databus = new DataBus()
 
+
 const Config = require('../common/config.js').Config
 
 export default class Player extends Sprite {
   constructor() {
+    var PLAYER_IMG_SRC = (pagebus.plane == -1 ? 'images/hero.png' : (pagebus.plane == 0 ? 'images/shop_img_6.png' : (pagebus.plane == 1 ? 'images/shop_img_7.png' : pagebus.plane == 2 ? 'images/shop_img_8.png' : 'images/hero.png')))
+    console.log(pagebus.plane)
     super(PLAYER_IMG_SRC, PLAYER_WIDTH, PLAYER_HEIGHT)
 
     // 玩家默认处于屏幕底部居中位置
