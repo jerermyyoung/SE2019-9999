@@ -132,6 +132,7 @@ export default class Template {
       for (var i = 9; i < 12; i++) {
         if (this.goodsname[i].isTapped(x, y) == true) {
           this.storepoint.changeSkin(0)
+          this.intro = new Button("已卸下皮肤", 'images/white.png', canvas.width * 0.1, canvas.height * 0.82, canvas.width * 0.8, canvas.height * 0.08)
         }
       }
 
@@ -256,8 +257,10 @@ export default class Template {
   }
 
   useSkin(x){
-    if (this.storepoint.haveThePlane(x))
+    if (this.storepoint.haveThePlane(x)){
       this.storepoint.changeSkin(x + 1)
+      this.intro = new Button("已换上此皮肤", 'images/white.png', canvas.width * 0.1, canvas.height * 0.82, canvas.width * 0.8, canvas.height * 0.08)
+    }
     else this.intro = new Button("您尚未拥有此皮肤", 'images/white.png', canvas.width * 0.1, canvas.height * 0.82, canvas.width * 0.8, canvas.height * 0.08)
   }
 
