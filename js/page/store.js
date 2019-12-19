@@ -23,6 +23,8 @@ export default class Store {
       this.mylevel[1][0] = true
       this.mylevel[2][0] = true
       
+      this.myskin = 'images/hero.png'
+      
       //下面是成就界面的一些数据
       this.summoney = 0        //这里的money是不会减少的，表示的累积的钱            
       this.num = 0            //游戏次数
@@ -44,6 +46,8 @@ export default class Store {
           this.mylevel[i][j] = b.mylevel[i][j]
         }
       }
+      
+      this.myskin = b.myskin
 
       //下面是成就界面的一些数据
       this.summoney = b.summoney       //这里的money是不会减少的，表示的累积的钱            
@@ -142,5 +146,26 @@ export default class Store {
 
   howMuchLastshoot() { //查询一滴血情况下击落敌机数接口
     return this.lastshoot
+  }
+  
+  changeSkin(x){ 
+    switch(x){
+      case 0:
+        this.myskin = 'images/hero.png'
+        break;
+      case 1:
+        this.myskin = 'images/shop_img_6.png'
+        break;
+      case 2:
+        this.myskin = 'images/shop_img_7.png'
+        break;
+      case 3:
+        this.myskin = 'images/shop_img_8.png'
+        break;
+    }
+  }
+
+  whichSkin(){
+    return this.myskin
   }
 }
