@@ -29,6 +29,8 @@ export default class Music {
     this.boomAudio.src = 'audio/boom.mp3'
 
     // this.playBgm()
+    this.hongzha = new Audio
+    this.hongzha.src = 'audio/hongzha.mp3'
   }
 
   playBgm() {
@@ -50,6 +52,11 @@ export default class Music {
   playExplosion() {
     this.boomAudio.currentTime = 0
     if (this.sound == true)this.boomAudio.play()
+  }
+  playhongzha()
+  {
+    this.hongzha.currentTime = 0
+    if (this.sound == true)this.hongzha.play()
   }
   setBgmState(state)//设置bgm
   {
