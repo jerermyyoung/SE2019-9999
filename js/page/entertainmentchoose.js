@@ -21,6 +21,7 @@ export default class Template {
     this.boxbg.src = "images/boxbg.png";
     this.harvestbtn = new Button('割草模式', 'images/bg4.jpg', Width / 2 - 110, 200, 100, 100);
     this.hitbossbtn = new Button('boss模式', 'images/bg4.jpg', Width / 2 + 20, 200, 100, 100);
+    this.crashbtn = new Button('撞击模式', 'images/bg4.jpg', Width / 2 - 110, 350, 100, 100);
     this.returnbtn = new Button('返回主页', 'images/btn.png', (Width - 100) / 2, 480, 100, 50);
   }
   restart()//重置
@@ -66,6 +67,7 @@ export default class Template {
     ctx.font = '16px Arial';
     this.harvestbtn.render(ctx);
     this.hitbossbtn.render(ctx);
+    this.crashbtn.render(ctx);
     this.returnbtn.render(ctx);
   }
   touchEventHandler(e)//触屏检测，触发相应事件
@@ -89,6 +91,12 @@ export default class Template {
       this.music.updateBgm();
       this.remove();
       pagebus.page = 10;
+    }
+    else if (this.crashbtn.isTapped(x, y) == true) {
+      pagebus.world = 3;
+      this.music.updateBgm();
+      this.remove();
+      pagebus.page = 11;
     }
     else if (this.returnbtn.isTapped(x, y) == true) {
       this.remove();

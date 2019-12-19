@@ -12,6 +12,7 @@ import Shop from './js/page/shop'
 import EntertainmentChoose from './js/page/entertainmentchoose'
 import Harvest from './js/entertainment/harvest'
 import HitBoss from './js/entertainment/hitboss'
+import Crash from './js/entertainment/crash'
 import HelpUI from './js/page/helpui'
 import Timer from './js/component/timer.js'
 //import achieve_Store from './js/page/achieve_store'
@@ -102,6 +103,12 @@ Object.defineProperty(pagebus, "page", {
         {
           pagebus.ctx.textAlign = "left"
           new HitBoss();
+          break;
+        }
+      case 11: //crash模式
+        {
+          pagebus.ctx.textAlign = "left"
+          new Crash();
           break;
         }
       /**
