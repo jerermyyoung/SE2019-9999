@@ -80,6 +80,7 @@ export default class Template {
       for (var i = 0; i < 9; i++) {
         this.goodsimg[i].render(ctx)
         this.goodsname[i].render(ctx)
+        if (i > 5) this.goodsname[i + 3].render(ctx)
         this.goodsval[i].render(ctx)
       }  
     }
@@ -112,11 +113,28 @@ export default class Template {
     }
 
     if (this.button_level_state == 1){
-      for (var i = 0; i < 9; i++) {
+      for (var i = 0; i < 6; i++) {
         if (this.goodsimg[i].isTapped(x, y) == true || this.goodsname[i].isTapped(x, y) == true) {
           this.showIntroduction(i)
         }
       }
+
+      for (var i = 6; i < 9; i++) {
+        if (this.goodsimg[i].isTapped(x, y) == true) {
+          this.showIntroduction(i)
+        }
+        if (this.goodsname[i].isTapped(x, y) == true) {
+          this.useSkin(i - 6)
+          //this.storepoint.changeSkin(i - 5)
+        }
+      }
+
+      for (var i = 9; i < 12; i++) {
+        if (this.goodsname[i].isTapped(x, y) == true) {
+          this.storepoint.changeSkin(0)
+        }
+      }
+
       for (var i = 0; i < 9; i++) {
         if (this.goodsval[i].isTapped(x, y) == true) {
           this.buyGoods(i)
@@ -166,21 +184,23 @@ export default class Template {
 
   resetGoods() {
     this.goodsimg = Array(9)
-    this.goodsname = Array(9)
+    this.goodsname = Array(12)
     this.goodsval = Array(9)
-    this.goodsnamedata = Array("复活卡", "无敌卡", "轰炸卡", "闪电卡", "补充卡", "无限卡", "红色小飞机", "黄色小飞机", "绿色小飞机")
+    this.goodsnamedata = Array("复活卡", "无敌卡", "轰炸卡", "闪电卡", "补充卡", "无限卡", "使用", "卸下")
     this.goodsvaldata = Array(1000, 800, 1000, 600, 600, 1000, 8000, 8000, 8000)
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < 2; i++) {
       for (var j = 0; j < 3; j++) {
         this.goodsimg[i * 3 + j] = new Button('', SHOP_IMG_HEAD + (i * 3 + j) + '.png', j * (GOODS_WIDTH * 1.5) + SHOP_IMG_START_X + GOODS_WIDTH * 0.1, i * (GOODS_HEIGHT * 1.9) + SHOP_IMG_START_Y, GOODS_WIDTH * 0.8, GOODS_HEIGHT * 0.8)
         this.goodsname[i * 3 + j] = new Button(this.goodsnamedata[i * 3 + j], 'images/shop_img_goodsname.png', j * (GOODS_WIDTH * 1.5) + SHOP_IMG_START_X, i * (GOODS_HEIGHT * 1.9) + SHOP_IMG_START_Y + GOODS_HEIGHT * 0.95, GOODS_WIDTH, GOODS_HEIGHT * 0.4)
-        if (i == 2 && this.storepoint.haveThePlane(i*3+j-6)) 
-        {
-          if (this.storepoint.plane == j) this.goodsval[i * 3 + j] = new Button('正在使用', 'images/shop_img_goodinuse.png', j * (GOODS_WIDTH * 1.5) + SHOP_IMG_START_X, i * (GOODS_HEIGHT * 1.9) + SHOP_IMG_START_Y + GOODS_HEIGHT * 1.36, GOODS_WIDTH, GOODS_HEIGHT * 0.4)
-          else this.goodsval[i * 3 + j] = new Button('使用', 'images/shop_img_gooduse.png', j * (GOODS_WIDTH * 1.5) + SHOP_IMG_START_X, i * (GOODS_HEIGHT * 1.9) + SHOP_IMG_START_Y + GOODS_HEIGHT * 1.36, GOODS_WIDTH, GOODS_HEIGHT * 0.4)
-        }
-        else this.goodsval[i * 3 + j] = new Button(this.goodsvaldata[i * 3 + j], 'images/shop_img_val.png', j * (GOODS_WIDTH * 1.5) + SHOP_IMG_START_X, i * (GOODS_HEIGHT * 1.9) + SHOP_IMG_START_Y + GOODS_HEIGHT * 1.36, GOODS_WIDTH, GOODS_HEIGHT * 0.4)
+        this.goodsval[i * 3 + j] = new Button(this.goodsvaldata[i * 3 + j], 'images/shop_img_val.png', j * (GOODS_WIDTH * 1.5) + SHOP_IMG_START_X, i * (GOODS_HEIGHT * 1.9) + SHOP_IMG_START_Y + GOODS_HEIGHT * 1.36, GOODS_WIDTH, GOODS_HEIGHT * 0.4)
       }
+    }
+    for (var j = 0; j < 3; j++) {
+      var i = 2
+      this.goodsimg[i * 3 + j] = new Button('', SHOP_IMG_HEAD + (i * 3 + j) + '.png', j * (GOODS_WIDTH * 1.5) + SHOP_IMG_START_X + GOODS_WIDTH * 0.1, i * (GOODS_HEIGHT * 1.9) + SHOP_IMG_START_Y, GOODS_WIDTH * 0.8, GOODS_HEIGHT * 0.8)
+      this.goodsname[i * 3 + j] = new Button(this.goodsnamedata[6], 'images/shop_img_goodsname.png', j * (GOODS_WIDTH * 1.5) + SHOP_IMG_START_X - GOODS_WIDTH * 0.1, i * (GOODS_HEIGHT * 1.9) + SHOP_IMG_START_Y + GOODS_HEIGHT * 0.95, GOODS_WIDTH * 0.6, GOODS_HEIGHT * 0.4)
+      this.goodsname[i * 3 + j + 3] = new Button(this.goodsnamedata[7], 'images/shop_img_goodsname.png', j * (GOODS_WIDTH * 1.5) + SHOP_IMG_START_X + GOODS_WIDTH * 0.6, i * (GOODS_HEIGHT * 1.9) + SHOP_IMG_START_Y + GOODS_HEIGHT * 0.95, GOODS_WIDTH * 0.6, GOODS_HEIGHT * 0.4)
+      this.goodsval[i * 3 + j] = new Button(this.goodsvaldata[i * 3 + j], 'images/shop_img_val.png', j * (GOODS_WIDTH * 1.5) + SHOP_IMG_START_X, i * (GOODS_HEIGHT * 1.9) + SHOP_IMG_START_Y + GOODS_HEIGHT * 1.36, GOODS_WIDTH, GOODS_HEIGHT * 0.4)
     }
   }
 
@@ -233,6 +253,12 @@ export default class Template {
     // this.introdata = Array("满血复活，复活前5秒无敌", "获得10秒无敌状态", "消灭界面上所有普通敌机", "加快击发速度", "魔力值 + 40", "20秒内魔力无限", "酷酷的红色小飞机", "像一道闪电划过天空", "环保型战机")
     this.introdata = Array("满血复活", "获得5秒无敌状态", "3s内持续全屏轰炸", "冻结敌方单位", "魔力值 + 40", "本局魔力无限", "酷酷的红色小飞机", "像一道闪电划过天空", "环保型战机")
     this.intro = new Button(this.introdata[x], 'images/white.png', canvas.width * 0.1, canvas.height * 0.82, canvas.width * 0.8, canvas.height * 0.08)
+  }
+
+  useSkin(x){
+    if (this.storepoint.haveThePlane(x))
+      this.storepoint.changeSkin(x + 1)
+    else this.intro = new Button("您尚未拥有此皮肤", 'images/white.png', canvas.width * 0.1, canvas.height * 0.82, canvas.width * 0.8, canvas.height * 0.08)
   }
 
   buyGoods(x){
