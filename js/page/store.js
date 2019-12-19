@@ -9,7 +9,7 @@ export default class Store {
     if (!b){
       this.money = 80000
       this.myplanes = new Array(false, false, false)
-      this.plane = -1 //默认小飞机
+      //this.plane = -1 //默认小飞机
       this.mycards = new Array(0, 0, 0, 0, 0, 0)
       this.mylevel = new Array()
       for (var i = 0; i < MAPTOT; i++) {
@@ -34,7 +34,7 @@ export default class Store {
       this.lastshoot = 0        //残血情况下击落的敌机数
     }
     else{
-      this.plane= b.plane
+      //this.plane= b.plane
       if(this.plane==null)this.plane=0
       this.money = b.money
       this.myplanes = b.myplanes
