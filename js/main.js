@@ -547,7 +547,7 @@ export default class Main {
         this.player.hpinf = true;
         this.tool1=null;//无敌计时器清空
         
-        this.tool1 = new Timer(5, "无敌时间", true, systemInfo.windowWidth / 2 - 100, systemInfo.windowHeight - 50, 200, 10,'#F56C6C');
+        this.tool1 = new Timer(5, "无敌时间", true, systemInfo.windowWidth / 2 - 100, systemInfo.windowHeight - 50, 200, 10,'#E6A23C');
         break;
       }
       case 2: { //轰炸
@@ -557,7 +557,8 @@ export default class Main {
         }
         this.player.bomb = true;
         this.tool2=null;//轰炸计时器清空
-        this.tool2 = new Timer(3, "轰炸时间", true, systemInfo.windowWidth / 2 - 100, systemInfo.windowHeight - 100, 200, 10, '#E6A23C');
+        this.tool2 = new Timer(3, "轰炸时间", true, systemInfo.windowWidth / 2 - 100, systemInfo.windowHeight - 100, 200, 10, '#F56C6C');
+        this.music.playhongzha();
         break;
       }
       case 3: {
@@ -680,6 +681,15 @@ export default class Main {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     this.bg.render(ctx)
+
+    if (this.tool2 && this.tool2.islive == true)
+    {
+      var tmp = ctx.fillStyle;
+      ctx.fillStyle = "rgb(255,0,0,0.3)";
+      ctx.fillRect(0, 0, systemInfo.windowWidth, systemInfo.windowHeight)
+      ctx.fillStyle = tmp;
+    }
+    
 
     databus.bullets
       .concat(databus.enemys)
