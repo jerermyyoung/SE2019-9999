@@ -3,6 +3,7 @@ import Bullet   from './bullet'
 import DataBus  from '../databus'
 import Constants from '../common/constants'
 import Pagebus from '../page/bus.js'
+import Store from '../page/store.js'
 let pagebus=new Pagebus();
 const screenWidth    = window.innerWidth
 const screenHeight   = window.innerHeight
@@ -22,8 +23,15 @@ const Config = require('../common/config.js').Config
 
 export default class Player extends Sprite {
   constructor() {
-    var PLAYER_IMG_SRC = (pagebus.plane == -1 ? 'images/hero.png' : (pagebus.plane == 0 ? 'images/shop_img_6.png' : (pagebus.plane == 1 ? 'images/shop_img_7.png' : pagebus.plane == 2 ? 'images/shop_img_8.png' : 'images/hero.png')))
-    console.log(pagebus.plane)
+    try {
+        var PLAYER_IMG_SRC = new Store(wx.getStorageSync('userstore')).whichSkin()
+        console.log(PLAYER_IMG_SRC)
+      }
+      catch (e) {
+        console.log(e)
+      }
+    //var PLAYER_IMG_SRC = (pagebus.plane == -1 ? 'images/hero.png' : (pagebus.plane == 0 ? 'images/shop_img_6.png' : (pagebus.plane == 1 ? 'images/shop_img_7.png' : pagebus.plane == 2 ? 'images/shop_img_8.png' : 'images/hero.png')))
+    //console.log(pagebus.plane)
     super(PLAYER_IMG_SRC, PLAYER_WIDTH, PLAYER_HEIGHT)
 
     // 玩家默认处于屏幕底部居中位置
