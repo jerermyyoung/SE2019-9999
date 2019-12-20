@@ -10,7 +10,7 @@ const BOSS_IMG_SRC = ['images/boss1.png', 'images/boss2.png', 'images/boss3.png'
 const BOSS_WIDTH = 150
 const BOSS_HEIGHT = 100
 const BOSS_HP = 10 
-var direction
+var direction//用来实现左右移动的变量
 
 const __ = {
   speed: Symbol('speed'),
@@ -79,6 +79,7 @@ export default class Boss extends Sprite {
         else{
           
           if(this.x>=window.innerWidth-this.width/2){
+            //只在超出屏幕范围时改变direction来实现左右来回移动的效果
             direction=-1;
           }
           else if(this.x <=  this.width/2){
