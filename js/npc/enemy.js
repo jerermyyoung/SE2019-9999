@@ -61,7 +61,7 @@ export default class Enemy extends Sprite {
   update(timeElapsed) {
     if (this.isAlive()) {
       if(!databus.frozen)this.y += this[__.speed]
-      if (this.y > window.innerHeight + this.height){
+      if (this.y > window.innerHeight*3/4 + this.height){
         databus.removeEnemey(this)  //对象回收
         //console.log('Enemy life: ' + (new Date().getTime() - this.birth))
       }

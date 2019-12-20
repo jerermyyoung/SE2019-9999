@@ -69,10 +69,12 @@ export default class Boss extends Sprite {
 
   update(timeElapsed) {
     if (this.isAlive()) {
-      if(!databus.frozen)this.y += this[__.speed]
-      if (this.y > window.innerHeight + this.height) {
-        databus.removeBoss(this)  //对象回收
-        //console.log('Enemy life: ' + (new Date().getTime() - this.birth))
+      if(!databus.frozen){
+        if (this.y < window.innerHeight*2/3) {
+          this.y += this[__.speed]
+          //databus.removeBoss(this)  //对象回收
+          //console.log('Enemy life: ' + (new Date().getTime() - this.birth))
+        }
       }
     }
     else {  //destroyed
