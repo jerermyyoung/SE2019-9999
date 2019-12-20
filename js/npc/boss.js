@@ -10,7 +10,7 @@ const BOSS_IMG_SRC = ['images/boss1.png', 'images/boss2.png', 'images/boss3.png'
 const BOSS_WIDTH = 150
 const BOSS_HEIGHT = 100
 const BOSS_HP = 10 
-
+var direction
 
 const __ = {
   speed: Symbol('speed'),
@@ -70,10 +70,22 @@ export default class Boss extends Sprite {
   update(timeElapsed) {
     if (this.isAlive()) {
       if(!databus.frozen){
-        if (this.y < window.innerHeight*2/3) {
+        if (this.y < window.innerHeight*1/5) {
           this.y += this[__.speed]
+          direction=1
           //databus.removeBoss(this)  //对象回收
           //console.log('Enemy life: ' + (new Date().getTime() - this.birth))
+        }
+        else{
+          
+          if(this.x>=window.innerWidth-this.width/2){
+            direction=-1;
+          }
+          else if(this.x <=  this.width/2){
+            direction=1;
+          }
+          this.x += this[__.speed] * direction
+      
         }
       }
     }
