@@ -6,7 +6,7 @@ import DataBus from '../databus'
 const FREIGHTER_IMG_SRC = 'images/freighter.png'
 const FREIGHTER_WIDTH = 90
 const FREIGHTER_HEIGHT = 90
-const FREIGHTER_MAXHP = 50
+const FREIGHTER_MAXHP = 100
 
 let databus = new DataBus()
 

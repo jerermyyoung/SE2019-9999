@@ -189,7 +189,6 @@ export default class Main {
   freighterGenerate() {
     if ((this.updateTimes * Constants.Freighter.SpawnRate) % Config.UpdateRate
       < Constants.Freighter.SpawnRate) {
-      
       let freighter = databus.pool.getItemByClass('freighter', Freighter)
       freighter.init(Constants.Freighter.Speed)
       databus.enemys.push(freighter)  //freighter is an enemy
@@ -207,6 +206,8 @@ export default class Main {
         if (enemy.isAlive() && enemy.isCollideWith(bullet)) {//循环检测碰撞
           if(enemy.freighter) {
             enemy.hpReduce(Constants.Enemy.CollisionDamage)
+            ctx.fillstyle = 'red'
+            ctx.fillRect(10,10,150,70)
             if(enemy.hp == 0) enemy.destroy()
           }
           else {
