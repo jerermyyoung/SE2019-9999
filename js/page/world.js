@@ -1,8 +1,8 @@
 import PageBus from './bus' //引用page选择组件
 import Button from '../component/button'
+import Music from '../runtime/music'
 let pagebus = new PageBus();//选择页面的通信
 let ctx = pagebus.ctx;
-
 const systemInfo = wx.getSystemInfoSync()
 const Width = systemInfo.windowWidth;
 const Height = systemInfo.windowHeight;
@@ -13,13 +13,14 @@ export default class Template {
     /******************
      * 初始化UI控件。
     *******************/
+    this.music = new Music()
     this.bg = new Image();
     this.bg.src = 'images/bg.jpg';
     this.boxbg = new Image();
     this.boxbg.src = "images/boxbg.png";
-    this.word1 = new Button('','images/bg1.jpg',Width/2-110,200,100,100);
-    this.word2 = new Button('', 'images/bg2.jpg', Width/2+10, 200, 100, 100);
-    this.word3 = new Button('', 'images/bg3.jpg', Width / 2 - 110, 350, 100, 100);
+    this.word1 = new Button('日间模式','images/bg1.jpg',Width/2-110,200,100,100);
+    this.word2 = new Button('夜间模式', 'images/bg2.jpg', Width/2+10, 200, 100, 100,"white");
+    this.word3 = new Button('护眼模式', 'images/bg3.jpg', Width / 2 - 110, 350, 100, 100);
     this.entertainmentbtn = new Button('娱乐模式', 'images/bg4.jpg', Width / 2 + 10, 350, 100, 100);
     this.returnbtn = new Button('返回主页','images/btn.png',(Width-100)/2,480,100,50);
   }
@@ -82,18 +83,21 @@ export default class Template {
      *******************/
      if(this.word1.isTapped(x,y)==true)
      {
-       pagebus.world=1;
+       pagebus.world=0;
        this.remove();
+       this.music.updateBgm();
        pagebus.page=4;
      }
      else if (this.word2.isTapped(x, y) == true) {
-       pagebus.world = 2;
+       pagebus.world = 1;
        this.remove();
+       this.music.updateBgm();
        pagebus.page = 4;
      }
      else if (this.word3.isTapped(x, y) == true) {
-       pagebus.world = 3;
+       pagebus.world = 2;
        this.remove();
+       this.music.updateBgm();
        pagebus.page = 4;
      }
      else if (this.entertainmentbtn.isTapped(x, y) == true) {

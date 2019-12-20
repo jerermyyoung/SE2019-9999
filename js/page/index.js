@@ -97,6 +97,11 @@ export default class Index {
       this.remove();
       pagebus.page = 6;
     }
+    else if (this.helpbtn.isTapped(x,y)==true)//帮助
+    {
+      this.remove();
+      pagebus.page=9;
+    }
   }
 }
 

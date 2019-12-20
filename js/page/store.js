@@ -7,8 +7,9 @@ export default class Store {
   
   constructor(b) {
     if (!b){
-      this.money = 0
+      this.money = 80000
       this.myplanes = new Array(false, false, false)
+      //this.plane = -1 //默认小飞机
       this.mycards = new Array(0, 0, 0, 0, 0, 0)
       this.mylevel = new Array()
       for (var i = 0; i < MAPTOT; i++) {
@@ -18,6 +19,11 @@ export default class Store {
         }
       }
       this.mylevel[0][0] = true
+      this.mylevel[0][1] = true
+      this.mylevel[1][0] = true
+      this.mylevel[2][0] = true
+      
+      this.myskin = 'images/hero.png'
       
       //下面是成就界面的一些数据
       this.summoney = 0        //这里的money是不会减少的，表示的累积的钱            
@@ -28,6 +34,8 @@ export default class Store {
       this.lastshoot = 0        //残血情况下击落的敌机数
     }
     else{
+      //this.plane= b.plane
+      if(this.plane==null)this.plane=0
       this.money = b.money
       this.myplanes = b.myplanes
       this.mycards = b.mycards
@@ -38,6 +46,8 @@ export default class Store {
           this.mylevel[i][j] = b.mylevel[i][j]
         }
       }
+      
+      this.myskin = b.myskin
 
       //下面是成就界面的一些数据
       this.summoney = b.summoney       //这里的money是不会减少的，表示的累积的钱            
@@ -136,5 +146,26 @@ export default class Store {
 
   howMuchLastshoot() { //查询一滴血情况下击落敌机数接口
     return this.lastshoot
+  }
+  
+  changeSkin(x){ 
+    switch(x){
+      case 0:
+        this.myskin = 'images/hero.png'
+        break;
+      case 1:
+        this.myskin = 'images/shop_img_6.png'
+        break;
+      case 2:
+        this.myskin = 'images/shop_img_7.png'
+        break;
+      case 3:
+        this.myskin = 'images/shop_img_8.png'
+        break;
+    }
+  }
+
+  whichSkin(){
+    return this.myskin
   }
 }

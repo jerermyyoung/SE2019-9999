@@ -1,5 +1,6 @@
 import PageBus from './bus' //引用page选择组件
 import Button from '../component/button'
+import Music from '../runtime/music'
 let pagebus = new PageBus();//选择页面的通信
 let ctx = pagebus.ctx;
 
@@ -13,11 +14,14 @@ export default class Template {
     /******************
      * 初始化UI控件。
     *******************/
+    this.music = new Music()
     this.bg = new Image();
     this.bg.src = 'images/bg.jpg';
     this.boxbg = new Image();
     this.boxbg.src = "images/boxbg.png";
-    this.harvestbtn = new Button('割草模式', 'images/bg1.jpg', Width / 2 - 110, 200, 100, 100);
+    this.harvestbtn = new Button('割草模式', 'images/bg4.jpg', Width / 2 - 110, 200, 100, 100);
+    this.hitbossbtn = new Button('boss模式', 'images/bg4.jpg', Width / 2 + 20, 200, 100, 100);
+    this.crashbtn = new Button('撞击模式', 'images/bg4.jpg', Width / 2 - 110, 350, 100, 100);
     this.returnbtn = new Button('返回主页', 'images/btn.png', (Width - 100) / 2, 480, 100, 50);
   }
   restart()//重置
@@ -62,6 +66,8 @@ export default class Template {
     ctx.fillText('选择模式', Width / 2 + 50, 130)
     ctx.font = '16px Arial';
     this.harvestbtn.render(ctx);
+    this.hitbossbtn.render(ctx);
+    this.crashbtn.render(ctx);
     this.returnbtn.render(ctx);
   }
   touchEventHandler(e)//触屏检测，触发相应事件
@@ -75,9 +81,22 @@ export default class Template {
      * 检测每个控件是否被点击，并触发相应的事件。
      *******************/
     if (this.harvestbtn.isTapped(x, y) == true) {
-      pagebus.world = 1;
+      pagebus.world = 3;
+      this.music.updateBgm();
       this.remove();
       pagebus.page = 8;
+    }
+    else if (this.hitbossbtn.isTapped(x, y) == true) {
+      pagebus.world = 3;
+      this.music.updateBgm();
+      this.remove();
+      pagebus.page = 10;
+    }
+    else if (this.crashbtn.isTapped(x, y) == true) {
+      pagebus.world = 3;
+      this.music.updateBgm();
+      this.remove();
+      pagebus.page = 11;
     }
     else if (this.returnbtn.isTapped(x, y) == true) {
       this.remove();

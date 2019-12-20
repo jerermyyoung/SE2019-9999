@@ -2,12 +2,14 @@ import Sprite   from '../base/sprite'
 import Bullet   from './bullet'
 import DataBus  from '../databus'
 import Constants from '../common/constants'
-
+import Pagebus from '../page/bus.js'
+import Store from '../page/store.js'
+let pagebus=new Pagebus();
 const screenWidth    = window.innerWidth
 const screenHeight   = window.innerHeight
 
 // 玩家相关常量设置
-const PLAYER_IMG_SRC = 'images/hero.png'
+
 const PLAYER_WIDTH   = 80
 const PLAYER_HEIGHT  = 80
 
@@ -16,10 +18,20 @@ const PLAYER_MAXMP = 100
 
 let databus = new DataBus()
 
+
 const Config = require('../common/config.js').Config
 
 export default class Player extends Sprite {
   constructor() {
+    try {
+        var PLAYER_IMG_SRC = new Store(wx.getStorageSync('userstore')).whichSkin()
+        console.log(PLAYER_IMG_SRC)
+      }
+      catch (e) {
+        console.log(e)
+      }
+    //var PLAYER_IMG_SRC = (pagebus.plane == -1 ? 'images/hero.png' : (pagebus.plane == 0 ? 'images/shop_img_6.png' : (pagebus.plane == 1 ? 'images/shop_img_7.png' : pagebus.plane == 2 ? 'images/shop_img_8.png' : 'images/hero.png')))
+    //console.log(pagebus.plane)
     super(PLAYER_IMG_SRC, PLAYER_WIDTH, PLAYER_HEIGHT)
 
     // 玩家默认处于屏幕底部居中位置
@@ -33,6 +45,12 @@ export default class Player extends Sprite {
     this.hp=PLAYER_MAXHP
     this.mp=PLAYER_MAXMP
 
+    //记录是否是无敌或者无限魔力
+    this.hpinf=false;
+    this.mpinf=false;
+
+    //记录是否轰炸
+    this.bomb=false;
   }
 
   /**
@@ -129,6 +147,7 @@ export default class Player extends Sprite {
   }
 
   hpReduce(variation){
+    if(this.hpinf==true)return;
     if(this.hp-variation<0) this.hp=0
     else this.hp=this.hp-variation
   }
@@ -139,6 +158,7 @@ export default class Player extends Sprite {
   }
 
   mpReduce(variation){
+    if(this.mpinf==true)return;
     if(this.mp-variation<0) this.mp=0
     else this.mp=this.mp-variation
   }

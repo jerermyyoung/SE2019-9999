@@ -18,11 +18,13 @@ export default class DataBus {
   }
 
   reset() {
+    this.frozen = false;
     this.frame      = 0
     this.score      = 0
     this.bullets    = []
     this.enemys     = []
     this.floatages  = []
+    this.bosses     = []
     //this.animations = []  //不再需要
     this.gameStatus = DataBus.GameRunning
   }
@@ -55,6 +57,19 @@ export default class DataBus {
   }
 
   /**
+   * 回收boss，进入对象池
+   * 此后不进入帧循环
+   */
+  removeBoss(boss) {
+    let temp = (boss === undefined) ?
+      this.bosses.shift() : this.bosses.splice(this.bosses.indexOf(boss), 1)
+
+    temp.visible = false
+
+    this.pool.recover(boss.constructor.name, boss)
+  }
+  
+  /**
    * 回收漂浮物，进入对象池
    * 此后不进入帧循环
    */
@@ -79,3 +94,5 @@ export default class DataBus {
 DataBus.GameRunning = 0
 DataBus.GameOver = 1
 DataBus.GamePaused = 2
+DataBus.GameWin = 3
+DataBus.BeforeGameOver=4//hp降为0，选择使用复活卡

@@ -81,9 +81,9 @@ export default class Template {
     this.bgmbtn.render(ctx);
     ctx.fillText('音效', (Width - 300) / 2 + 60, 260);
     this.soundbtn.render(ctx);
-    ctx.fillText('夜间模式', (Width - 300) / 2 + 60, 320);
+    //ctx.fillText('夜间模式', (Width - 300) / 2 + 60, 320);
 
-    this.nightbtn.render(ctx);
+    //this.nightbtn.render(ctx);
     this.savebtn.render(ctx);
   }
   touchEventHandler(e)//触屏检测，触发相应事件

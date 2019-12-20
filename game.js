@@ -11,12 +11,16 @@ import Store from './js/page/store'
 import Shop from './js/page/shop'
 import EntertainmentChoose from './js/page/entertainmentchoose'
 import Harvest from './js/entertainment/harvest'
+import HitBoss from './js/entertainment/hitboss'
+import Crash from './js/entertainment/crash'
+import HelpUI from './js/page/helpui'
+import Timer from './js/component/timer.js'
 //import achieve_Store from './js/page/achieve_store'
 
 /*
   新增界面: import XXX from './js/page/xxx'
 */
-
+//new Timer(1);
 let pagebus = new PageBus();
 let mystore
 //let achstore = new achieve_Store()
@@ -33,6 +37,7 @@ Object.defineProperty(pagebus, "page", {
       {
           try {
             mystore = new Store(wx.getStorageSync('userstore'))
+            console.log(mystore);
           }
           catch (e) {
             console.log(e)
@@ -85,8 +90,26 @@ Object.defineProperty(pagebus, "page", {
         }
       case 8: //割草模式
         {
-          pagebus.ctx.textAlign = "center"
+          pagebus.ctx.textAlign = "left"
           new Harvest();
+          break;
+        }
+      case 9: //帮助界面
+      {
+          pagebus.ctx.textAlign = "center"
+          new HelpUI();
+          break;
+      }
+      case 10: //boss模式
+        {
+          pagebus.ctx.textAlign = "left"
+          new HitBoss();
+          break;
+        }
+      case 11: //crash模式
+        {
+          pagebus.ctx.textAlign = "left"
+          new Crash();
           break;
         }
       /**

@@ -101,7 +101,7 @@ export default class Main {
   restart() {
     databus.reset()
 
-    Config.Bullet.Type = 'quintuple';
+    Config.Bullet.Type = '';
 
     //0.与通用类的关联
     console.log(`Restart: Config.UpdateRate=${Config.UpdateRate}`)
@@ -358,7 +358,7 @@ export default class Main {
         item.update(timeElapsed)
       })
     let random = Math.ceil(Math.random() * 10);
-    for(let i=0;i<random;i++)
+    for (let i = 0; i < random; i++)
       this.enemyGenerate();
 
     //this.floatageGenerate()  //Freighters spawn floatages in turn
